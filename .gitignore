@@ -131,3 +131,6 @@ dmypy.json
 
 #cookiecutter config
 cookiecutter-config-file.yml
+
+#.idea
+.idea
