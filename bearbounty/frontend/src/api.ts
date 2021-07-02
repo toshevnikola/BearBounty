@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import {
+  IUserProfile,
+  IUserProfileUpdate,
+  IUserProfileCreate,
+  IBot,
+} from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -19,16 +24,30 @@ export const api = {
     return axios.post(`${apiUrl}/api/v1/login/access-token`, params);
   },
   async getMe(token: string) {
-    return axios.get<IUserProfile>(`${apiUrl}/api/v1/users/me`, authHeaders(token));
+    return axios.get<IUserProfile>(
+      `${apiUrl}/api/v1/users/me`,
+      authHeaders(token)
+    );
   },
   async updateMe(token: string, data: IUserProfileUpdate) {
-    return axios.put<IUserProfile>(`${apiUrl}/api/v1/users/me`, data, authHeaders(token));
+    return axios.put<IUserProfile>(
+      `${apiUrl}/api/v1/users/me`,
+      data,
+      authHeaders(token)
+    );
   },
   async getUsers(token: string) {
-    return axios.get<IUserProfile[]>(`${apiUrl}/api/v1/users/`, authHeaders(token));
+    return axios.get<IUserProfile[]>(
+      `${apiUrl}/api/v1/users/`,
+      authHeaders(token)
+    );
   },
   async updateUser(token: string, userId: number, data: IUserProfileUpdate) {
-    return axios.put(`${apiUrl}/api/v1/users/${userId}`, data, authHeaders(token));
+    return axios.put(
+      `${apiUrl}/api/v1/users/${userId}`,
+      data,
+      authHeaders(token)
+    );
   },
   async createUser(token: string, data: IUserProfileCreate) {
     return axios.post(`${apiUrl}/api/v1/users/`, data, authHeaders(token));
@@ -41,5 +60,14 @@ export const api = {
       new_password: password,
       token,
     });
+  },
+  async getBots(token: string) {
+    return axios.get<IBot[]>(`${apiUrl}/api/v1/bots/`, authHeaders(token));
+  },
+  async deleteBot(id: number, token: string) {
+    return axios.delete<IBot>(
+      `${apiUrl}/api/v1/bots/${id}`,
+      authHeaders(token)
+    );
   },
 };
