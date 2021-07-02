@@ -3,3 +3,5 @@
 from app.db.base_class import Base  # noqa
 from app.models.item import Item  # noqa
 from app.models.user import User  # noqa
+from app.models.bot import Bot  # noqa
+from app.models.strategy import Strategy  # noqa
