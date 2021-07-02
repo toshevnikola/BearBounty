@@ -23,12 +23,12 @@ type MainContext = ActionContext<MainState, State>;
 export const actions = {
   async actionLogIn(
     context: MainContext,
-    payload: { username: string; password: string }
+    payload: { username: string; password: string },
   ) {
     try {
       const response = await api.logInGetToken(
         payload.username,
-        payload.password
+        payload.password,
       );
       const token = response.data.access_token;
       if (token) {
@@ -68,7 +68,7 @@ export const actions = {
         await Promise.all([
           api.updateMe(context.state.token, payload),
           await new Promise((resolve, reject) =>
-            setTimeout(() => resolve(undefined), 500)
+            setTimeout(() => resolve(undefined), 500),
           ),
         ])
       )[0];
@@ -138,7 +138,7 @@ export const actions = {
   },
   async removeNotification(
     context: MainContext,
-    payload: { notification: AppNotification; timeout: number }
+    payload: { notification: AppNotification; timeout: number },
   ) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -158,7 +158,7 @@ export const actions = {
         await Promise.all([
           api.passwordRecovery(payload.username),
           await new Promise((resolve, reject) =>
-            setTimeout(() => resolve(undefined), 500)
+            setTimeout(() => resolve(undefined), 500),
           ),
         ])
       )[0];
@@ -178,7 +178,7 @@ export const actions = {
   },
   async resetPassword(
     context: MainContext,
-    payload: { password: string; token: string }
+    payload: { password: string; token: string },
   ) {
     const loadingNotification = {
       content: 'Resetting password',
@@ -190,7 +190,7 @@ export const actions = {
         await Promise.all([
           api.resetPassword(payload.password, payload.token),
           await new Promise((resolve, reject) =>
-            setTimeout(() => resolve(undefined), 500)
+            setTimeout(() => resolve(undefined), 500),
           ),
         ])
       )[0];
@@ -244,7 +244,7 @@ export const dispatchRemoveLogIn = dispatch(actions.actionRemoveLogIn);
 export const dispatchRouteLoggedIn = dispatch(actions.actionRouteLoggedIn);
 export const dispatchRouteLogOut = dispatch(actions.actionRouteLogOut);
 export const dispatchUpdateUserProfile = dispatch(
-  actions.actionUpdateUserProfile
+  actions.actionUpdateUserProfile,
 );
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);

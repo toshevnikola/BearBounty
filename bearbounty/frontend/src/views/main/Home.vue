@@ -1,13 +1,23 @@
 <template>
   <v-container fluid>
     <v-layout wrap>
-      <v-flex md4 v-for="bot in bots" :key="bot.id">
+      <v-flex md3 v-for="bot in bots" :key="bot.id">
         <v-card class="mx-auto ma-4" max-width="400">
-          <v-card-title class="font-weight-600 display-1 ">{{
+          <v-card-title class="font-weight-400 large-font ">{{
             bot.name
           }}</v-card-title>
-          <v-card-text>{{ bot.description }}</v-card-text>
-          <v-btn @click="deleteBot(bot.id)">Delete</v-btn>
+          <v-card-text class="ma-0 pt-0 small-font">{{
+            bot.description
+          }}</v-card-text>
+          <v-card-actions top>
+            <v-btn
+              small
+              class="ma-1 pa-0"
+              :to="{ name: 'main-bots-edit', params: { id: bot.id } }"
+            >
+              <v-icon>edit</v-icon>
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
@@ -24,23 +34,33 @@ import { IBot } from '@/interfaces';
 export default class Home extends Vue {
   public bots: IBot[] = [];
 
-  getBots() {
+  private getBots() {
     return readBots(this.$store);
   }
-  async deleteBot(id: number) {
-    // TODO: check out @Watch to avoid removing the deleted bot this twice.
-    await dispatchDeleteBot(this.$store, { id: id });
-    for (var i = 0; i < this.bots.length; i++) {
-      if (this.bots[i].id === id) {
-        this.bots.splice(i, 1);
-        break;
-      }
-    }
-  }
+  // async deleteBot(id: number) {
+  //   // TODO: check out @Watch to avoid removing the deleted bot this twice.
+  //   await dispatchDeleteBot(this.$store, { id: id });
+  //   for (var i = 0; i < this.bots.length; i++) {
+  //     if (this.bots[i].id === id) {
+  //       this.bots.splice(i, 1);
+  //       break;
+  //     }
+  //   }
+  // }
 
-  public async mounted() {
+  private async mounted() {
     await dispatchGetBots(this.$store);
     this.bots = this.getBots();
   }
 }
 </script>
+
+<style>
+.small-font {
+  font-size: 14px;
+}
+
+.large-font {
+  font-size: 26px;
+}
+</style>

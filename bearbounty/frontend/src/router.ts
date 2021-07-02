@@ -56,6 +56,14 @@ export default new Router({
                 ),
             },
             {
+              path: 'bots/edit/:id',
+              name: 'main-bots-edit',
+              component: () =>
+                import(
+                  /* webpackChunkName: "main-bots-edit" */ './views/main/EditBot.vue'
+                ),
+            },
+            {
               path: 'profile',
               component: RouterComponent,
               redirect: 'profile/view',
