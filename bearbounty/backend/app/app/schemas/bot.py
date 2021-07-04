@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -17,7 +18,7 @@ class BotCreate(BotBase):
 
 # Properties to receive on bot update
 class BotUpdate(BotBase):
-    pass
+    is_running: Optional[bool] = False
 
 
 # Properties shared by models stored in DB
@@ -25,6 +26,11 @@ class BotInDBBase(BotBase):
     id: int
     name: str
     owner_id: int
+    created_at: datetime.datetime = None
+    updated_at: datetime.datetime = None
+    profit_24h: Optional[float] = 0.00
+    profit_all_time: Optional[float] = 0.00
+    is_running:Optional[bool] = False
 
     class Config:
         orm_mode = True
@@ -35,6 +41,6 @@ class Bot(BotInDBBase):
     pass
 
 
-# Properties properties stored in DB
+# Properties stored in DB
 class BotInDB(BotInDBBase):
     pass
