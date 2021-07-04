@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { IBot } from '@/interfaces';
+import { IBot, IBotCreate, IBotUpdate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
@@ -15,6 +15,9 @@ import {
   commitSetUserProfile,
   commitGetBots,
   commitDeleteBot,
+  commitGetStrategies,
+  commitCreateBot,
+  commitUpdateBot,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -209,7 +212,7 @@ export const actions = {
     }
   },
 
-  async getBots(context: MainContext) {
+  async actionGetBots(context: MainContext) {
     try {
       const response = await api.getBots(context.state.token);
       if (response.data) {
@@ -220,11 +223,44 @@ export const actions = {
     }
   },
 
-  async deleteBot(context: MainContext, payload: { id: number }) {
+  async actionDeleteBot(context: MainContext, payload: { id: number }) {
     try {
+      console.log(payload);
+      console.log(payload.id);
       const response = await api.deleteBot(payload.id, context.state.token);
       if (response.data) {
         commitDeleteBot(context, response.data);
+      }
+    } catch (error) {
+      await dispatchCheckApiError(context, error);
+    }
+  },
+
+  async actionGetStrategies(context: MainContext) {
+    try {
+      const response = await api.getStrategies(context.state.token);
+      if (response.data) {
+        commitGetStrategies(context, response.data);
+      }
+    } catch (error) {
+      await dispatchCheckApiError(context, error);
+    }
+  },
+  async actionCreateBot(context: MainContext, payload: IBotCreate) {
+    try {
+      const response = await api.createBot(context.state.token, payload);
+      if (response.data) {
+        commitCreateBot(context, response.data);
+      }
+    } catch (error) {
+      await dispatchCheckApiError(context, error);
+    }
+  },
+  async actionUpdateBot(context: MainContext, payload: IBotUpdate) {
+    try {
+      const response = await api.updateBot(context.state.token, payload);
+      if (response.data) {
+        commitUpdateBot(context, response.data);
       }
     } catch (error) {
       await dispatchCheckApiError(context, error);
@@ -249,5 +285,9 @@ export const dispatchUpdateUserProfile = dispatch(
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
-export const dispatchGetBots = dispatch(actions.getBots);
-export const dispatchDeleteBot = dispatch(actions.deleteBot);
+export const dispatchGetStrategies = dispatch(actions.actionGetStrategies);
+export const dispatchGetBots = dispatch(actions.actionGetBots);
+export const dispatchCreateBot = dispatch(actions.actionCreateBot);
+
+export const dispatchDeleteBot = dispatch(actions.actionDeleteBot);
+export const dispatchUpdateBot = dispatch(actions.actionUpdateBot);

@@ -1,4 +1,4 @@
-import { IBot, IUserProfile } from '@/interfaces';
+import { IBot, IStrategy, IUserProfile } from '@/interfaces';
 
 export interface AppNotification {
   content: string;
@@ -15,4 +15,5 @@ export interface MainState {
   dashboardShowDrawer: boolean;
   notifications: AppNotification[];
   bots: IBot[];
+  strategies: IStrategy[];
 }

@@ -1,4 +1,4 @@
-import { IBot, IUserProfile } from '@/interfaces';
+import { IBot, IBotCreate, IStrategy, IUserProfile } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
@@ -38,6 +38,19 @@ export const mutations = {
       return el.id !== payload.id;
     });
   },
+  setStrategies(state: MainState, payload: IStrategy[]) {
+    state.strategies = payload;
+  },
+  createBot(state: MainState, payload: IBot) {
+    state.bots.push(payload);
+  },
+  updateBot(state: MainState, payload: IBot) {
+    var foundIndex = state.bots.findIndex((x) => x.id == payload.id);
+    console.log(foundIndex);
+    console.log(state.bots[foundIndex]);
+    console.log(payload);
+    state.bots[foundIndex] = payload;
+  },
 };
 
 const { commit } = getStoreAccessors<MainState | any, State>('');
@@ -56,3 +69,6 @@ export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);
 export const commitGetBots = commit(mutations.setBots);
 export const commitDeleteBot = commit(mutations.deleteBot);
+export const commitGetStrategies = commit(mutations.setStrategies);
+export const commitCreateBot = commit(mutations.createBot);
+export const commitUpdateBot = commit(mutations.updateBot);

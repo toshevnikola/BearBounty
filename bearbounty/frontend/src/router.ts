@@ -56,11 +56,28 @@ export default new Router({
                 ),
             },
             {
+              path: 'bots/create',
+              name: 'main-bots-create',
+              component: () =>
+                import(
+                  /* webpackChunkName: "main-bots-create" */ './views/main/CreateBot.vue'
+                ),
+            },
+            {
               path: 'bots/edit/:id',
               name: 'main-bots-edit',
               component: () =>
                 import(
                   /* webpackChunkName: "main-bots-edit" */ './views/main/EditBot.vue'
+                ),
+            },
+
+            {
+              path: 'bots/details/:id',
+              name: 'main-bots-details',
+              component: () =>
+                import(
+                  /* webpackChunkName: "main-bots-detail" */ './views/main/BotDetails.vue'
                 ),
             },
             {

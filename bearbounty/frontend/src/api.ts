@@ -5,7 +5,11 @@ import {
   IUserProfileUpdate,
   IUserProfileCreate,
   IBot,
+  IStrategy,
+  IBotCreate,
+  IBotUpdate,
 } from './interfaces';
+import { commitCreateBot } from './store/main/mutations';
 
 function authHeaders(token: string) {
   return {
@@ -66,7 +70,23 @@ export const api = {
   },
   async deleteBot(id: number, token: string) {
     return axios.delete<IBot>(
-      `${apiUrl}/api/v1/bots/${id}`,
+      `${apiUrl}/api/v1/bots/${id}/`,
+      authHeaders(token),
+    );
+  },
+  async createBot(token: string, data: IBotCreate) {
+    return axios.post<IBot>(`${apiUrl}/api/v1/bots/`, data, authHeaders(token));
+  },
+  async updateBot(token: string, data: IBotUpdate) {
+    return axios.put<IBot>(
+      `${apiUrl}/api/v1/bots/${data.id}/`,
+      data,
+      authHeaders(token),
+    );
+  },
+  async getStrategies(token: string) {
+    return axios.get<IStrategy[]>(
+      `${apiUrl}/api/v1/strategies/`,
       authHeaders(token),
     );
   },
