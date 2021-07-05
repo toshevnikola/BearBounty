@@ -2,6 +2,7 @@ from .crud_item import item
 from .crud_user import user
 from .crud_bot import bot
 from .crud_strategy import strategy
+from .crud_account import account
 # For a new basic set of CRUD operations you could just do
 
 # from .base import CRUDBase

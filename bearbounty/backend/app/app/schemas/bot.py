@@ -9,6 +9,7 @@ class BotBase(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     strategy_id: int
+    account_id: int = None
 
 
 # Properties to receive on bot creation
@@ -30,7 +31,7 @@ class BotInDBBase(BotBase):
     updated_at: datetime.datetime = None
     profit_24h: Optional[float] = 0.00
     profit_all_time: Optional[float] = 0.00
-    is_running:Optional[bool] = False
+    is_running: Optional[bool] = False
 
     class Config:
         orm_mode = True

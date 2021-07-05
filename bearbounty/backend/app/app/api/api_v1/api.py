@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.api_v1.endpoints import items, login, users, utils, bots, strategies
+from app.api.api_v1.endpoints import items, login, users, utils, bots, strategies, accounts
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
@@ -9,3 +9,4 @@ api_router.include_router(utils.router, prefix="/utils", tags=["utils"])
 api_router.include_router(items.router, prefix="/items", tags=["items"])
 api_router.include_router(bots.router, prefix="/bots", tags=["bots"])
 api_router.include_router(strategies.router, prefix="/strategies", tags=["strategies"])
+api_router.include_router(accounts.router, prefix="/accounts", tags=["accounts"])

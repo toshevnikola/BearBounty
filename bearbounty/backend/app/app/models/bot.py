@@ -17,6 +17,8 @@ class Bot(Base):
     description = Column(String)
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="bots")
+    account_id = Column(Integer, ForeignKey("account.id"))
+    account = relationship("Account", back_populates="bots")
     strategy_id = Column(Integer, ForeignKey('strategy.id'))
     strategy = relationship("Strategy", back_populates="bots")
     created_at = Column(DateTime, default=datetime.now)

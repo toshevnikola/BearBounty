@@ -19,3 +19,4 @@ class User(Base):
     items = relationship("Item", back_populates="owner")
     bots = relationship("Bot", back_populates="owner")
     strategies = relationship("Strategy", back_populates='owner')
+    accounts = relationship("Account", back_populates='owner')
