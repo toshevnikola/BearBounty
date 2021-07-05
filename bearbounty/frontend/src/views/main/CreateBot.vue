@@ -50,13 +50,18 @@
   </v-container>
 </template>
 <script lang="ts">
-import { IBot, IBotCreate, IStrategy } from '@/interfaces';
+import { IBot, IBotCreate, IStrategy, IAccount } from '@/interfaces';
 import { Component, Vue } from 'vue-property-decorator';
-import { readStrategies } from '@/store/main/getters';
-import { dispatchGetStrategies, dispatchCreateBot } from '@/store/main/actions';
+import { readStrategies, readAccounts } from '@/store/main/getters';
+import {
+  dispatchGetStrategies,
+  dispatchCreateBot,
+  dispatchGetAccounts,
+} from '@/store/main/actions';
 @Component
 export default class CreateBot extends Vue {
   public strategies: IStrategy[] = [];
+  public accounts: IAccount[] = [];
   public selectedStrategy?: IStrategy = undefined;
   public valid = false;
   nameRules = [
@@ -68,13 +73,21 @@ export default class CreateBot extends Vue {
 
   public botName: string = '';
   public botDescription: string = '';
+  public accountId?: number = undefined;
   private getStrategies() {
     return readStrategies(this.$store);
   }
+  private getAccounts() {
+    return readAccounts(this.$store);
+  }
   private async mounted() {
     await dispatchGetStrategies(this.$store);
+    await dispatchGetAccounts(this.$store);
     this.strategies = this.getStrategies();
+    this.accounts = this.getAccounts();
     this.selectedStrategy = this.strategies[0];
+    // this.accountId;
+    console.log(this.accounts);
   }
 
   private async submit() {
@@ -83,6 +96,7 @@ export default class CreateBot extends Vue {
         name: this.botName,
         description: this.botDescription,
         strategy_id: this.selectedStrategy!.id,
+        account_id: this.accountId!,
       };
       if (newBot.description === '') {
         newBot.description = newBot.name;

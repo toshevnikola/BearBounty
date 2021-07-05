@@ -20,6 +20,8 @@ export const getters = {
     state.notifications.length > 0 && state.notifications[0],
   bots: (state: MainState) => state.bots,
   strategies: (state: MainState) => state.strategies,
+  accounts: (state: MainState) => state.accounts,
+  currentAccount: (state: MainState) => state.currentAccount,
 };
 
 const { read } = getStoreAccessors<MainState, State>('');
@@ -34,3 +36,5 @@ export const readUserProfile = read(getters.userProfile);
 export const readFirstNotification = read(getters.firstNotification);
 export const readBots = read(getters.bots);
 export const readStrategies = read(getters.strategies);
+export const readAccounts = read(getters.accounts);
+export const readCurrentAccount = read(getters.currentAccount);

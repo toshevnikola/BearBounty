@@ -13,6 +13,8 @@ const defaultState: MainState = {
   notifications: [],
   bots: [],
   strategies: [],
+  accounts: [],
+  currentAccount: undefined,
 };
 
 export const mainModule = {

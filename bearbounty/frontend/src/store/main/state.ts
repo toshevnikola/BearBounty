@@ -1,4 +1,4 @@
-import { IBot, IStrategy, IUserProfile } from '@/interfaces';
+import { IAccount, IBot, IStrategy, IUserProfile } from '@/interfaces';
 
 export interface AppNotification {
   content: string;
@@ -16,4 +16,6 @@ export interface MainState {
   notifications: AppNotification[];
   bots: IBot[];
   strategies: IStrategy[];
+  accounts: IAccount[];
+  currentAccount?: IAccount;
 }

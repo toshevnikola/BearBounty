@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { IBot, IBotCreate, IBotUpdate } from '@/interfaces';
+import { IAccount, IBot, IBotCreate, IBotUpdate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
@@ -18,6 +18,8 @@ import {
   commitGetStrategies,
   commitCreateBot,
   commitUpdateBot,
+  commitGetAccounts,
+  commitSetCurrentAccount,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -225,8 +227,6 @@ export const actions = {
 
   async actionDeleteBot(context: MainContext, payload: { id: number }) {
     try {
-      console.log(payload);
-      console.log(payload.id);
       const response = await api.deleteBot(payload.id, context.state.token);
       if (response.data) {
         commitDeleteBot(context, response.data);
@@ -266,6 +266,20 @@ export const actions = {
       await dispatchCheckApiError(context, error);
     }
   },
+  async actionGetAccounts(context: MainContext) {
+    try {
+      const response = await api.getAccounts(context.state.token);
+      if (response.data) {
+        commitGetAccounts(context, response.data);
+      }
+    } catch (error) {
+      await dispatchCheckApiError(context, error);
+    }
+  },
+  async actionSetCurrentAccount(context: MainContext, payload: IAccount) {
+    console.log('in action:', payload);
+    commitSetCurrentAccount(context, payload);
+  },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -285,9 +299,12 @@ export const dispatchUpdateUserProfile = dispatch(
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchGetAccounts = dispatch(actions.actionGetAccounts);
 export const dispatchGetStrategies = dispatch(actions.actionGetStrategies);
 export const dispatchGetBots = dispatch(actions.actionGetBots);
 export const dispatchCreateBot = dispatch(actions.actionCreateBot);
-
 export const dispatchDeleteBot = dispatch(actions.actionDeleteBot);
 export const dispatchUpdateBot = dispatch(actions.actionUpdateBot);
+export const dispatchSetCurrentAccount = dispatch(
+  actions.actionSetCurrentAccount,
+);

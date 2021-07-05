@@ -8,6 +8,7 @@ import {
   IStrategy,
   IBotCreate,
   IBotUpdate,
+  IAccount,
 } from './interfaces';
 import { commitCreateBot } from './store/main/mutations';
 
@@ -87,6 +88,12 @@ export const api = {
   async getStrategies(token: string) {
     return axios.get<IStrategy[]>(
       `${apiUrl}/api/v1/strategies/`,
+      authHeaders(token),
+    );
+  },
+  async getAccounts(token: string) {
+    return axios.get<IAccount[]>(
+      `${apiUrl}/api/v1/accounts/`,
       authHeaders(token),
     );
   },

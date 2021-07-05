@@ -1,4 +1,10 @@
-import { IBot, IBotCreate, IStrategy, IUserProfile } from '@/interfaces';
+import {
+  IAccount,
+  IBot,
+  IBotCreate,
+  IStrategy,
+  IUserProfile,
+} from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
@@ -51,6 +57,13 @@ export const mutations = {
     console.log(payload);
     state.bots[foundIndex] = payload;
   },
+  setAccounts(state: MainState, payload: IAccount[]) {
+    state.accounts = payload;
+  },
+  setCurrentAccount(state: MainState, payload: IAccount) {
+    console.log('in mutations:', payload);
+    state.currentAccount = payload;
+  },
 };
 
 const { commit } = getStoreAccessors<MainState | any, State>('');
@@ -72,3 +85,5 @@ export const commitDeleteBot = commit(mutations.deleteBot);
 export const commitGetStrategies = commit(mutations.setStrategies);
 export const commitCreateBot = commit(mutations.createBot);
 export const commitUpdateBot = commit(mutations.updateBot);
+export const commitGetAccounts = commit(mutations.setAccounts);
+export const commitSetCurrentAccount = commit(mutations.setCurrentAccount);
