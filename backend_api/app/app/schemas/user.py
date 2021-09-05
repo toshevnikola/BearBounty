@@ -21,6 +21,14 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "email": "example@test.com",
+                "password": "password"
+            }
+        }
+
 
 # Properties to receive via API on update
 class UserUpdate(UserBase):
@@ -42,4 +50,3 @@ class User(UserInDBBase):
 # Additional properties stored in DB
 class UserInDB(UserInDBBase):
     hashed_password: str
-

@@ -1,6 +1,12 @@
+from datetime import timedelta
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
+from sqlalchemy.orm import Session
 
+import crud
+from api import deps
+from core.config import settings
 from schemas import User
 from schemas.user import UserLogin
 
@@ -8,9 +14,29 @@ router = APIRouter()
 
 
 @router.post('/login')
-def login(user: UserLogin, Authorize: AuthJWT = Depends()):
-    if user.email != "test@example.com" or user.password != "test":
-        raise HTTPException(status_code=401, detail="Bad username or password")
-
+async def login(user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()):
+    user = crud.user.authenticate(
+        db, email=user.email, password=user.password
+    )
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    elif not crud.user.is_active(user):
+        raise HTTPException(status_code=400, detail="Inactive user")
     access_token = Authorize.create_access_token(subject=user.email)
-    return {"access_token": access_token}
+    refresh_token = Authorize.create_refresh_token(subject=user.email)
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+
+@router.post('/refresh')
+def refresh(Authorize: AuthJWT = Depends()):
+    """
+    The jwt_refresh_token_required() function insures a valid refresh
+    token is present in the request before running any code below that function.
+    we can use the get_jwt_subject() function to get the subject of the refresh
+    token, and use the create_access_token() function again to make a new access token
+    """
+    Authorize.jwt_refresh_token_required()
+
+    current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    return {"access_token": new_access_token}

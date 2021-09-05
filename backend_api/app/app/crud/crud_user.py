@@ -24,5 +24,19 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.refresh(db_obj)
         return db_obj
 
+    def authenticate(self, db: Session, email: str, password: str) -> Optional[User]:
+        db_user = self.get_by_email(db, email=email)
+        if not db_user:
+            return None
+        if not verify_password(password, db_user.hashed_password):
+            return None
+        return db_user
+
+    def is_active(self, user: User) -> bool:
+        return user.is_active
+
+    def is_superuser(self, user: User) -> bool:
+        return user.is_superuser
+
 
 user = CRUDUser(User)
