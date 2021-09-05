@@ -1,0 +1,10 @@
+uvicorn
+fastapi
+python-multipart
+passlib
+pydantic
+alembic
+sqlalchemy
+raven
+alembic
+python-jose

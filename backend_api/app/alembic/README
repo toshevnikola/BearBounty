@@ -1,0 +1,7 @@
+Generic single-database configuration.
+
+To create a new migration execute:
+- alembic revision --autogenerate -m "Your message"
+
+To run migrations execute:
+- alembic upgrade head
