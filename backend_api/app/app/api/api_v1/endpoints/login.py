@@ -13,7 +13,7 @@ from schemas.user import UserLogin
 router = APIRouter()
 
 
-@router.post('/login')
+@router.post('/get-tokens')
 async def login(user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()):
     user = crud.user.authenticate(
         db, email=user.email, password=user.password
@@ -22,8 +22,9 @@ async def login(user: UserLogin, db: Session = Depends(deps.get_db), Authorize: 
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     elif not crud.user.is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
-    access_token = Authorize.create_access_token(subject=user.email)
-    refresh_token = Authorize.create_refresh_token(subject=user.email)
+    access_token = Authorize.create_access_token(subject=user.email, expires_time=settings.ACCESS_TOKEN_EXPIRE_SECONDS)
+    refresh_token = Authorize.create_refresh_token(subject=user.email,
+                                                   expires_time=settings.REFRESH_TOKEN_EXPIRE_SECONDS)
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 

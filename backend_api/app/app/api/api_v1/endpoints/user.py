@@ -26,6 +26,11 @@ def create_user(
             status_code=400,
             detail="The user with this username already exists in the system.",
         )
+    if user_in.password != user_in.confirm_password:
+        raise HTTPException(
+            status_code=400,
+            detail="Password and confirm password fields do not match.",
+        )
     user = crud.user.create(db, obj_in=user_in)
 
     return user
