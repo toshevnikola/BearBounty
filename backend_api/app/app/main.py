@@ -32,8 +32,8 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 @AuthJWT.load_config
@@ -43,19 +43,18 @@ def get_config():
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
+
+
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
 
     openapi_schema = get_openapi(
-        title = "My Auth API",
-        version = "1.0",
-        description = "An API with an Authorize Button",
-        routes = app.routes,
+        title="My Auth API",
+        version="1.0",
+        description="An API with an Authorize Button",
+        routes=app.routes,
     )
 
     openapi_schema["components"]["securitySchemes"] = {
@@ -63,7 +62,7 @@ def custom_openapi():
             "type": "apiKey",
             "in": "header",
             "name": "Authorization",
-            "description": "Enter: **'Bearer &lt;JWT&gt;'**, where JWT is the access token"
+            "description": "Enter: **'Bearer &lt;JWT&gt;'**, where JWT is the access token",
         }
     }
 
@@ -72,20 +71,19 @@ def custom_openapi():
 
     for route in api_router:
         path = getattr(route, "path")
-        endpoint = getattr(route,"endpoint")
+        endpoint = getattr(route, "endpoint")
         methods = [method.lower() for method in getattr(route, "methods")]
 
         for method in methods:
             # access_token
             if (
-                re.search("jwt_required", inspect.getsource(endpoint)) or
-                re.search("fresh_jwt_required", inspect.getsource(endpoint)) or
-                re.search("jwt_optional", inspect.getsource(endpoint))
+                re.search("jwt_required", inspect.getsource(endpoint))
+                or re.search("fresh_jwt_required", inspect.getsource(endpoint))
+                or re.search("jwt_optional", inspect.getsource(endpoint))
+                or re.search("get_current_user", inspect.getsource(endpoint))
             ):
                 openapi_schema["paths"][path][method]["security"] = [
-                    {
-                        "Bearer Auth": []
-                    }
+                    {"Bearer Auth": []}
                 ]
 
     app.openapi_schema = openapi_schema
@@ -96,5 +94,5 @@ app.openapi = custom_openapi
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info", reload=True)

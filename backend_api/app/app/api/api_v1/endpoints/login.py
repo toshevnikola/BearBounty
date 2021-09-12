@@ -13,22 +13,25 @@ from schemas.user import UserLogin
 router = APIRouter()
 
 
-@router.post('/get-tokens')
-async def login(user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()):
-    user = crud.user.authenticate(
-        db, email=user.email, password=user.password
-    )
+@router.post("/get-tokens")
+async def login(
+    user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()
+):
+    user = crud.user.authenticate(db, email=user.email, password=user.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     elif not crud.user.is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
-    access_token = Authorize.create_access_token(subject=user.id, expires_time=settings.ACCESS_TOKEN_EXPIRE_SECONDS)
-    refresh_token = Authorize.create_refresh_token(subject=user.id,
-                                                   expires_time=settings.REFRESH_TOKEN_EXPIRE_SECONDS)
+    access_token = Authorize.create_access_token(
+        subject=user.id, expires_time=settings.ACCESS_TOKEN_EXPIRE_SECONDS
+    )
+    refresh_token = Authorize.create_refresh_token(
+        subject=user.id, expires_time=settings.REFRESH_TOKEN_EXPIRE_SECONDS
+    )
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 
-@router.post('/refresh')
+@router.post("/refresh")
 def refresh(Authorize: AuthJWT = Depends()):
     """
     The jwt_refresh_token_required() function insures a valid refresh

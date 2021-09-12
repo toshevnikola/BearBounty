@@ -13,4 +13,6 @@ class Exchange(Base):
     supported_pairs = Column(ARRAY(String))
     is_available = Column(Boolean(), default=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    updated_at = Column(
+        DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
+    )

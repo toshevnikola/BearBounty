@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
-    ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 10
+    # ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 10 #this is 10 minutes
+    ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 10 * 60  # this is 10 hours used while developing
     REFRESH_TOKEN_EXPIRE_SECONDS: int = 60 * 24 * 60 * 60
     # POSTGRES
     POSTGRES_SERVER: str
@@ -41,8 +42,8 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 settings = Settings()

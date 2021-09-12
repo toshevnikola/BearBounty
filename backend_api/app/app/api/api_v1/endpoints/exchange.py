@@ -32,7 +32,7 @@ router = APIRouter()
 #     return exchange
 
 
-@router.get('/', response_model=List[schemas.Exchange], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=List[schemas.Exchange], status_code=status.HTTP_200_OK)
 def get_exchanges(db: Session = Depends(deps.get_db)):
     exchanges = crud.exchange.get_multi(db)
     return exchanges

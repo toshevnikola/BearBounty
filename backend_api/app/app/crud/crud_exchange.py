@@ -7,7 +7,6 @@ from app.schemas.exchange import ExchangeCreate, ExchangeUpdate
 
 
 class CRUDExchange(CRUDBase[Exchange, ExchangeCreate, ExchangeUpdate]):
-
     def get_by_name(self, db: Session, *, name: str) -> Optional[Exchange]:
         return db.query(Exchange).filter(Exchange.name == name).first()
 
