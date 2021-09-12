@@ -8,16 +8,20 @@ from sqlalchemy import (
     ARRAY,
     Float,
     ForeignKey,
+    Enum,
 )
 from app.db.base_class import Base
 
-from app.models.dca_bot import DCABot  # noqa
+from app.models.deal import Deal  # noqa
+from constants import OrderStatusEnum
 
 
-class Deal(Base):
+class Order(Base):
     id = Column(Integer, primary_key=True)
-    bot_id = Column(Integer, ForeignKey(DCABot.id), index=True)
-    pair = Column(String, nullable=False)
+    deal_id = Column(Integer, ForeignKey(Deal.id), index=True)
+    amount = Column(Float, nullable=False)
+    fee = Column(Float, nullable=False)
+    status = Column(Enum(OrderStatusEnum))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
