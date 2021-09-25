@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - env.env
+
+  database:
+    image: "postgres"
+    env_file:
+      - env.env # configure postgres
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+  signals-listener:
+    build:
+      context: .
+      dockerfile: publisher.dockerfile
+    env_file:
+      - env.env
+    depends_on:
+      - database
+
+volumes:
+  database-data:
