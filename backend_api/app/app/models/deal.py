@@ -18,6 +18,7 @@ class Deal(Base):
     id = Column(Integer, primary_key=True)
     bot_id = Column(Integer, ForeignKey(DCABot.id), index=True)
     pair = Column(String, nullable=False)
+    is_active = Column(Boolean, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow

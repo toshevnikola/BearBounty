@@ -13,7 +13,7 @@ from sqlalchemy import (
 from app.db.base_class import Base
 
 from app.models.deal import Deal  # noqa
-from constants import OrderStatusEnum
+from app.constants import OrderStatusEnum
 
 
 class Order(Base):
