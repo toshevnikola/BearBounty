@@ -1,11 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException, Body
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 import schemas
 from api import deps
+from schemas import DCABotUpdate
 from utils import get_current_user
 from app import crud
 
@@ -59,10 +60,30 @@ def get_user_exchange_bots(
 
 @router.get("/", response_model=List[schemas.DCABot], status_code=status.HTTP_200_OK)
 def get_user_bots(
-    *, Authorize: AuthJWT = Depends(), db: Session = Depends(deps.get_db),
+    *,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(deps.get_db),
 ):
     current_user = get_current_user(Authorize)
     return crud.dca_bot.get_by_user(db=db, user_id=current_user)
+
+
+@router.patch("/{id}", response_model=schemas.DCABot, status_code=status.HTTP_200_OK)
+def update_bot(
+    *,
+    Authorize: AuthJWT = Depends(),
+    db: Session = Depends(deps.get_db),
+    id: int,
+    bot_in: DCABotUpdate,
+):
+    current_user = get_current_user(Authorize)
+    bot_db = crud.dca_bot.get_single(db=db, id=id, user_id=current_user)
+    if not bot_db:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Bot not found"
+        )
+    bot = crud.dca_bot.update(db=db, db_obj=bot_db, obj_in=bot_in)
+    return bot
 
 
 @router.delete("/{id}", response_model=schemas.DCABot, status_code=status.HTTP_200_OK)

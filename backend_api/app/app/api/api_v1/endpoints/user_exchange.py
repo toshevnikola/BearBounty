@@ -1,4 +1,5 @@
 from typing import Any, List
+from sqlalchemy import exc
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.openapi.models import Response
@@ -31,7 +32,8 @@ def create_user_exchange(
     )
     if user_exchange:
         raise HTTPException(
-            status_code=400, detail="Already connected to this exchange",
+            status_code=400,
+            detail="Already connected to this exchange",
         )
     else:
         "CONNECT TO PROVIDED EXCHANGE"
@@ -65,4 +67,10 @@ async def delete_user_exchange(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     if user_exchange.user_id != current_user:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
-    return crud.user_exchange.remove(db=db, id=id)
+    try:
+        return crud.user_exchange.remove(db=db, id=id)
+    except exc.IntegrityError as e:
+        raise HTTPException(
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            detail="Remove the bots on this exchange before removing it.",
+        )

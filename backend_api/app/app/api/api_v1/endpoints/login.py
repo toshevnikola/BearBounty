@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 import crud
 from api import deps
 from core.config import settings
+from core.security import denylist
+
 from schemas import User
 from schemas.user import UserLogin
 
@@ -44,3 +46,13 @@ def refresh(Authorize: AuthJWT = Depends()):
     current_user = Authorize.get_jwt_subject()
     new_access_token = Authorize.create_access_token(subject=current_user)
     return {"access_token": new_access_token}
+
+
+@router.delete("/revoke")
+def revoke_tokens(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    jti = Authorize.get_raw_jwt()["jti"]
+    denylist.add(jti)
+    print(denylist)
+
+    return {"detail": "Access token has been revoke"}

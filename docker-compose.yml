@@ -5,21 +5,21 @@ services:
     ports:
       - "6379:6379"
     env_file:
-      - env.env
+      - ./signals_listener/env.env
 
   database:
     image: "postgres"
     env_file:
-      - env.env # configure postgres
+      - ./signals_listener/env.env
     volumes:
       - database-data:/var/lib/postgresql/data/
 
   signals-listener:
     build:
-      context: .
+      context: signals_listener
       dockerfile: publisher.dockerfile
     env_file:
-      - env.env
+      - ./signals_listener/env.env
     depends_on:
       - database
 

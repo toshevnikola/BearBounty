@@ -18,7 +18,6 @@ class DCABotBase(BaseModel):
     consider_overall_sentiment: Optional[bool] = None
     stop_loss_pct: Optional[float] = None
     take_profit_pct: Optional[float] = None
-    user_exchange_id: Optional[int] = None
     is_running: Optional[bool]
 
 
@@ -60,6 +59,7 @@ class DCABotUpdate(DCABotBase):
 
 class DCABotInDBBase(DCABotBase):
     id: Optional[int] = None
+    user_exchange_id: Optional[int] = None
 
     class Config:
         orm_mode = True

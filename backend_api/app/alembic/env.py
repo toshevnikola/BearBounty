@@ -20,6 +20,7 @@ fileConfig(config.config_file_name)
 # target_metadata = mymodel.Base.metadata
 
 from app.db.base import Base
+
 target_metadata = Base.metadata
 
 
@@ -27,6 +28,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
 
 def get_url():
     user = os.getenv("POSTGRES_USER", "postgres")
@@ -62,7 +64,9 @@ def run_migrations_online():
     configuration = config.get_section(config.config_ini_section)
     configuration["sqlalchemy.url"] = get_url()
     connectable = engine_from_config(
-        configuration, prefix="sqlalchemy.", poolclass=pool.NullPool,
+        configuration,
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:

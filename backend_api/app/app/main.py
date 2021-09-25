@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
-from pydantic import BaseModel, BaseSettings
+from pydantic import BaseSettings
 from starlette.middleware.cors import CORSMiddleware
 from core.config import settings
 from api.api_v1.api import api_router
@@ -11,6 +11,8 @@ import re
 import inspect
 from fastapi.routing import APIRoute
 from fastapi.openapi.utils import get_openapi
+
+from core.security import denylist
 
 app = FastAPI(
     title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
@@ -81,6 +83,7 @@ def custom_openapi():
                 or re.search("fresh_jwt_required", inspect.getsource(endpoint))
                 or re.search("jwt_optional", inspect.getsource(endpoint))
                 or re.search("get_current_user", inspect.getsource(endpoint))
+                or re.search("jwt_refresh_token_required", inspect.getsource(endpoint))
             ):
                 openapi_schema["paths"][path][method]["security"] = [
                     {"Bearer Auth": []}
@@ -93,6 +96,14 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+@AuthJWT.token_in_denylist_loader
+def check_if_token_in_denylist(decrypted_token):
+    print("in")
+    jti = decrypted_token["jti"]
+    return jti in denylist
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=5000, log_level="info", reload=True)
