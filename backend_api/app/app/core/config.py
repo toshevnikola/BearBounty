@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     # ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 10 #this is 10 minutes
     ACCESS_TOKEN_EXPIRE_SECONDS: int = (
-        60 * 10 * 60
+            60 * 10 * 60
     )  # this is 10 hours used while developing
     REFRESH_TOKEN_EXPIRE_SECONDS: int = 60 * 24 * 60 * 60
     authjwt_denylist_enabled: bool = True

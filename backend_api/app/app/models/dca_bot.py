@@ -35,4 +35,5 @@ class DCABot(Base):
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
     is_running = Column(Boolean, default=True)
+    in_deal = Column(Boolean, default=False)
     user_exchange_id = Column(Integer, ForeignKey(UserExchange.id), index=True)

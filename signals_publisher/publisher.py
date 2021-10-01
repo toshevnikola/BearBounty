@@ -18,6 +18,7 @@ POSTGRES_DB = os.getenv('POSTGRES_DB', 'postgres')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
 CONN = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}"
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+REDIS_PASSWORD = None
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 
 redis_conn = redis.Redis(host=REDIS_HOST, password=REDIS_PASSWORD)
@@ -41,6 +42,7 @@ class PotentialOrder:
     user_exchange_id: int
     user_id: int
     bot_id: int
+    base_order_amount: float
 
 
 @dataclass()
@@ -52,6 +54,7 @@ class BuyOrderSignal:
     user_exchange_id: int
     user_id: int
     bot_id: int
+    base_order_amount: float
 
 
 async def get_pairs_to_check() -> Dict[PairToCheck, List[PotentialOrder]]:
@@ -64,7 +67,8 @@ async def get_pairs_to_check() -> Dict[PairToCheck, List[PotentialOrder]]:
             potential_order = PotentialOrder(trading_pair=tp, exchange=r['exchange_name'],
                                              user_exchange_id=r['user_exchange_id'],
                                              bot_id=r['bot_id'],
-                                             user_id=r['user_id'])
+                                             user_id=r['user_id'],
+                                             base_order_amount=r['base_order_amount'])
 
             pairs_to_check[pair].append(potential_order)
 
@@ -97,7 +101,8 @@ async def main():
                         signal=summary,
                         user_exchange_id=potential_order.user_exchange_id,
                         user_id=potential_order.user_id,
-                        bot_id=potential_order.bot_id
+                        bot_id=potential_order.bot_id,
+                        base_order_amount=potential_order.base_order_amount
                     )
                     print(buy_order_signal)
                     publish("buy_order", vars(buy_order_signal))

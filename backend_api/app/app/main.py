@@ -4,15 +4,15 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from pydantic import BaseSettings
 from starlette.middleware.cors import CORSMiddleware
-from core.config import settings
-from api.api_v1.api import api_router
+from app.core.config import settings
+from app.api.api_v1.api import api_router
 from fastapi.responses import JSONResponse
 import re
 import inspect
 from fastapi.routing import APIRoute
 from fastapi.openapi.utils import get_openapi
 
-from core.security import denylist
+from app.core.security import denylist
 
 app = FastAPI(
     title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"

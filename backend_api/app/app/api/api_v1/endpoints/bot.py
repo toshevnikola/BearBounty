@@ -4,9 +4,9 @@ from fastapi import APIRouter, status, Depends, HTTPException, Body
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
-import schemas
-from api import deps
-from schemas import DCABotUpdate
+from app import schemas
+from app.api import deps
+from app.schemas import DCABotUpdate
 from utils import get_current_user
 from app import crud
 

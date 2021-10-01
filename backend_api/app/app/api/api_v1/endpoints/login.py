@@ -4,13 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
-import crud
-from api import deps
-from core.config import settings
-from core.security import denylist
+import app.crud as crud
+from app.api import deps
+from app.core.config import settings
+from app.core.security import denylist
 
-from schemas import User
-from schemas.user import UserLogin
+from app.schemas.user import UserLogin
 
 router = APIRouter()
 

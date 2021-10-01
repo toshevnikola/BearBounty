@@ -38,3 +38,4 @@ starlette==0.14.2
 typing-extensions==3.10.0.2
 uvicorn==0.15.0
 zipp==3.5.0
+tenacity==8.0.1

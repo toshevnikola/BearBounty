@@ -19,6 +19,7 @@ class DCABotBase(BaseModel):
     stop_loss_pct: Optional[float] = None
     take_profit_pct: Optional[float] = None
     is_running: Optional[bool]
+    in_deal: Optional[bool]
 
 
 # Properties to receive via API on creation

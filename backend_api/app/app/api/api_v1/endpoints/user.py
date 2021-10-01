@@ -4,7 +4,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 from app import crud, schemas
 from app.api import deps
-from schemas import User
+from app.schemas import User
 
 router = APIRouter()
 

@@ -3,4 +3,4 @@ WORKDIR /code
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 COPY . .
-CMD ["python", "publisher.py"]
+CMD ["python", "-u", "publisher.py"]

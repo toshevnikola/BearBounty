@@ -2,26 +2,53 @@ version: "3.7"
 services:
   redis:
     image: redis
+#    command: redis-server --requirepass ${PASSWORD}
     ports:
       - "6379:6379"
     env_file:
-      - ./signals_listener/env.env
+      - signals_publisher/env.env
 
   database:
     image: "postgres"
     env_file:
-      - ./signals_listener/env.env
+      - backend_api/app/.env
     volumes:
       - database-data:/var/lib/postgresql/data/
 
-  signals-listener:
-    build:
-      context: signals_listener
-      dockerfile: publisher.dockerfile
-    env_file:
-      - ./signals_listener/env.env
-    depends_on:
-      - database
+#  celery-workers:
+#    build:
+#      context: order_manager
+#      dockerfile: celery_workers.dockerfile
+#    env_file:
+#      - ./order_manager/env.env
+#    depends_on:
+#      - database
+#      - redis
+#
+#  backend-api:
+#    build:
+#      context: backend_api
+#      dockerfile: backend_api.dockerfile
+#    command: bash -c "python app/backend_pre_start.py && alembic upgrade head && uvicorn --reload --host 0.0.0.0 --port 5000 app.main:app"
+#    ports:
+#      - 5000:5000
+#    depends_on:
+#      - database
+#      - redis
+#    env_file:
+#      - backend_api/app/.env
+
+#  signals-publisher:
+#    build:
+#      context: signals_publisher
+#      dockerfile: publisher.dockerfile
+#    env_file:
+#      - signals_publisher/env.env
+#    depends_on:
+#      - database
+#      - redis
+#      - backend-api
+#      - celery-workers
 
 volumes:
   database-data:
