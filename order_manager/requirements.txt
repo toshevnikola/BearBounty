@@ -1,3 +1,5 @@
 celery
 gevent
 python-binance
+psycopg2
+redis

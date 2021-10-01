@@ -10,7 +10,7 @@ from tradingview_ta import TA_Handler
 from typing import Set, Dict, List
 from dataclasses import dataclass
 
-from signals_listener.sql_queries import pairs_to_check_query
+from sql_queries import pairs_to_check_query
 
 POSTGRES_USER = os.getenv('POSTGRES_USER', 'postgres')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')

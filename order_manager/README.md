@@ -1,0 +1,1 @@
+celery -A order_manager.tasks worker -c 4 --pool gevent --loglevel=info
