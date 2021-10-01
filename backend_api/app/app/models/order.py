@@ -26,3 +26,4 @@ class Order(Base):
     updated_at = Column(
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
+    price = Column(Float, nullable=False)

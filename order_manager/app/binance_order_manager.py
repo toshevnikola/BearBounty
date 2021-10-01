@@ -1,8 +1,6 @@
 import json
 import os
-
 from order_manager.tasks import start_deal
-
 import redis
 
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)

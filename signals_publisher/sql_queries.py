@@ -11,5 +11,5 @@ from dcabot
          left join "user" u on u.id = ue.user_id
          left join deal d on dcabot.id = d.bot_id
 where dcabot.is_running = True
-  and dcabot.id not in (select deal.bot_id from deal where deal.is_active=true);
+  and dcabot.in_deal = False
 """
