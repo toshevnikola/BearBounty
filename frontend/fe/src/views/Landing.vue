@@ -27,17 +27,24 @@
       <h1>Smart trading terminal<br />and crypto trading bots</h1>
       <a href="" display="block" id="cta">Start trading</a>
     </div>
+    <Login />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-
-@Component
+import Login from "../components/Login.vue";
+@Component({
+  components: { Login },
+})
 export default class Landing extends Vue {}
 </script>
 
 <style scoped>
+div {
+  margin-left: 2%;
+  margin-top: 2%;
+}
 #logo {
   float: left;
 }
@@ -51,6 +58,10 @@ export default class Landing extends Vue {}
 }
 .navItem:visited {
   color: #3f7b70;
+}
+.navItem:hover {
+  color: #5c9087;
+  text-decoration: underline;
 }
 #nav {
   float: left;
@@ -82,7 +93,7 @@ h1 {
   float: left;
 }
 #cta {
-  width: 248px;
+  width: 220px;
   font-size: 24px;
   display: block;
   background-color: #f0943d;
@@ -91,7 +102,7 @@ h1 {
   border-radius: 5px;
   float: left;
   text-align: center;
-  padding: 35px 0;
+  padding: 25px 0;
   margin-top: 1%;
 }
 </style>
