@@ -1,95 +1,138 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="600px">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark v-bind="attrs" v-on="on">
-          Open Dialog
-        </v-btn>
-      </template>
+    <v-dialog
+      v-model="isShown"
+      persistent
+      max-width="70%"
+      @click:outside="save()"
+      style="padding: 0"
+    >
       <v-card>
-        <v-card-title>
-          <span class="text-h5">User Profile</span>
-        </v-card-title>
-        <v-card-text>
+        <v-card-text style="padding: 0">
           <v-container>
             <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
+              <v-col cols="8" id="leftSide">
+                <v-col cols="10"><h1>Sign In</h1></v-col>
+                <v-col cols="10"
+                  ><input type="text" autocomplete="off" placeholder="Email" />
+                </v-col>
+                <v-col cols="10"
+                  ><input
+                    type="password"
+                    autocomplete="new-password"
+                    placeholder="Password"
+                  />
+                </v-col>
+
+                <v-col cols="10">
+                  <a id="login" @click="save()">Log In</a>
+                </v-col>
+                <v-col cols="10">
+                  <div id="or">-or-</div>
+                </v-col>
+                <v-col cols="10">
+                  <a id="loginGoogle" @click="save()"
+                    ><img
+                      style="position: relative; top: 5px"
+                      src="../assets/google_small.png"
+                    />
+                    Log in with Google</a
+                  >
+                </v-col>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal middle name"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="[
-                    'Skiing',
-                    'Ice hockey',
-                    'Soccer',
-                    'Basketball',
-                    'Hockey',
-                    'Reading',
-                    'Writing',
-                    'Coding',
-                    'Basejump',
-                  ]"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
+              <v-col cols="4" id="rightSide">
+                <img style="max-width: 100%" src="../assets/bb_big.svg" />
               </v-col>
             </v-row>
           </v-container>
-          <small>*indicates required field</small>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">
-            Close
-          </v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">
-            Save
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-row>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Emit } from "vue-property-decorator";
 
 @Component
 export default class Login extends Vue {
-  public dialog: boolean = false;
+  public isShown: boolean = true;
+  @Emit("isLoginShown")
+  public isLoginShown(show: boolean): boolean {
+    return show;
+  }
+  public save(): void {
+    this.isLoginShown(true);
+  }
 }
 </script>
 
 <style scoped>
+h1 {
+  color: #1c5d73;
+}
+input {
+  font-size: 20px;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #929292;
+  font-weight: 700;
+  background-color: #c4c4c4;
+  width: 395px;
+  height: 47px;
+  padding-left: 20px;
+}
+input:focus {
+  border: none;
+}
+#rightSide {
+  background-color: #113c4a;
+  vertical-align: middle;
+  position: relative;
+  padding: 0;
+}
+#rightSide > img {
+  position: absolute; /* 2 */
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+#leftSide {
+  background-color: #dddddd;
+  padding-left: 5%;
+  padding-top: 5%;
+}
+#login {
+  width: 395px;
+  font-size: 20px;
+  display: block;
+  background-color: #f0943d;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  float: left;
+  text-align: center;
+  padding: 25px 0;
+  margin-top: 1%;
+}
+#loginGoogle {
+  width: 395px;
+  font-size: 20px;
+  display: block;
+  background-color: #2e6361;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  float: left;
+  text-align: center;
+  padding: 25px 0;
+  margin-top: 1%;
+  margin-bottom: 50px;
+}
+#or {
+  width: 395px;
+  text-align: center;
+  font-size: 30px;
+  color: #1c5d73;
+  margin-top: 15%;
+}
 </style>

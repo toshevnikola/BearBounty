@@ -1,14 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from '../src/router'
-import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css';
+import Vuetify from 'vuetify';
 
-
+const vuetify=new Vuetify();
 Vue.use(Vuetify);
-const vuetify = new Vuetify({
-  theme:{ dark: false },
-});
-
 Vue.config.productionTip = false;
 new Vue({
   router,

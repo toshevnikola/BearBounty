@@ -1,19 +1,21 @@
 
 
 <template>
-  <div id="app">
-    <Landing></Landing>
-    <!-- <div id="nav"> -->
-    <!-- <router-link :to="{ name: 'Algorithms' }"></router-link> -->
-    <!-- <router-link :to="{ name: 'Plans' }"></router-link> -->
-    <!-- <router-link :to="{ name: 'Charts' }"></router-link> -->
-    <!-- <router-link :to="{ name: 'Landing' }">Landing</router-link> |
+  <v-app>
+    <div id="app">
+      <Landing></Landing>
+      <!-- <div id="nav"> -->
+      <!-- <router-link :to="{ name: 'Algorithms' }"></router-link> -->
+      <!-- <router-link :to="{ name: 'Plans' }"></router-link> -->
+      <!-- <router-link :to="{ name: 'Charts' }"></router-link> -->
+      <!-- <router-link :to="{ name: 'Landing' }">Landing</router-link> |
         <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link> |
         <router-link :to="{ name: 'About' }">About</router-link> -->
-    <!-- </div> -->
-    <Footer />
-    <!-- <router-view /> -->
-  </div>
+      <!-- </div> -->
+      <Footer />
+      <!-- <router-view /> -->
+    </div>
+  </v-app>
 </template>
 
 <script lang="ts">

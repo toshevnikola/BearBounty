@@ -25,9 +25,9 @@
     </div>
     <div id="headingCtaWrapper">
       <h1>Smart trading terminal<br />and crypto trading bots</h1>
-      <a href="" display="block" id="cta">Start trading</a>
+      <a @click="toggleLogin()" display="block" id="cta">Start trading</a>
     </div>
-    <Login />
+    <Login @isLoginShown="toggleLogin()" v-if="isLoginShown"></Login>
   </div>
 </template>
 
@@ -37,7 +37,12 @@ import Login from "../components/Login.vue";
 @Component({
   components: { Login },
 })
-export default class Landing extends Vue {}
+export default class Landing extends Vue {
+  public isLoginShown: boolean = false;
+  public toggleLogin(): void {
+    this.isLoginShown = !this.isLoginShown;
+  }
+}
 </script>
 
 <style scoped>
