@@ -10,26 +10,26 @@ from app.api import deps
 
 router = APIRouter()
 
-#
-# @router.post("/", response_model=schemas.Exchange, status_code=status.HTTP_201_CREATED)
-# def create_exchange(
-#         *,
-#         db: Session = Depends(deps.get_db),
-#         exchange_in: schemas.ExchangeCreate,
-# ) -> Any:
-#     """
-#     Create new exchange.
-#     """
-#     exchange = crud.exchange.get_by_name(db, name=exchange_in.name)
-#     if exchange:
-#         raise HTTPException(
-#             status_code=400,
-#             detail="The exchange with this name already exists in the system.",
-#         )
-#
-#     exchange = crud.exchange.create(db, obj_in=exchange_in)
-#
-#     return exchange
+
+@router.post("/", response_model=schemas.Exchange, status_code=status.HTTP_201_CREATED)
+def create_exchange(
+        *,
+        db: Session = Depends(deps.get_db),
+        exchange_in: schemas.ExchangeCreate,
+) -> Any:
+    """
+    Create new exchange.
+    """
+    exchange = crud.exchange.get_by_name(db, name=exchange_in.name)
+    if exchange:
+        raise HTTPException(
+            status_code=400,
+            detail="The exchange with this name already exists in the system.",
+        )
+
+    exchange = crud.exchange.create(db, obj_in=exchange_in)
+
+    return exchange
 
 
 @router.get("/", response_model=List[schemas.Exchange], status_code=status.HTTP_200_OK)

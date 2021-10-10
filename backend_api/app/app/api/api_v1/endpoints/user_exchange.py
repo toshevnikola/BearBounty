@@ -52,7 +52,9 @@ def get_user_exchanges(
     *, Authorize: AuthJWT = Depends(), db: Session = Depends(deps.get_db)
 ):
     current_user = get_current_user(Authorize)
-    return crud.user_exchange.get_by_user(db, user_id=current_user)
+    res = crud.user_exchange.get_by_user(db, user_id=current_user)
+    return res
+    # return crud.user_exchange.get_by_user(db, user_id=current_user)
 
 
 @router.delete(

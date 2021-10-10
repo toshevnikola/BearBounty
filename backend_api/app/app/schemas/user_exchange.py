@@ -2,8 +2,10 @@ from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr
 
-
 # Shared properties
+from app.schemas import Exchange
+
+
 class UserExchangeBase(BaseModel):
     exchange_id: int = None
 
@@ -38,4 +40,4 @@ class UserExchangeInDB(UserExchangeInDBBase):
 
 # Additional properties to return via API
 class UserExchange(UserExchangeInDBBase):
-    pass
+    exchange: Exchange

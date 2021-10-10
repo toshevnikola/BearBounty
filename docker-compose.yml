@@ -25,18 +25,18 @@ services:
 #      - database
 #      - redis
 #
-#  backend-api:
-#    build:
-#      context: backend_api
-#      dockerfile: backend_api.dockerfile
-#    command: bash -c "python app/backend_pre_start.py && alembic upgrade head && uvicorn --reload --host 0.0.0.0 --port 5000 app.main:app"
-#    ports:
-#      - 5000:5000
-#    depends_on:
-#      - database
-#      - redis
-#    env_file:
-#      - backend_api/app/.env
+  backend-api:
+    build:
+      context: backend_api
+      dockerfile: backend_api.dockerfile
+    command: bash -c "python app/backend_pre_start.py && alembic upgrade head && uvicorn --reload --host 0.0.0.0 --port 5000 app.main:app"
+    ports:
+      - 5000:5000
+    depends_on:
+      - database
+      - redis
+    env_file:
+      - backend_api/app/.env
 
 #  signals-publisher:
 #    build:
