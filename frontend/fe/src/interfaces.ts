@@ -31,3 +31,6 @@ export interface Bot{
     id:number,
     user_exchange_id:number
 }
+export interface BotEdit{
+    is_running?:boolean,
+}

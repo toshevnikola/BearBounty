@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl, apiVersion } from '@/env';
-import {UserExchange, Bot} from './interfaces';
+import {UserExchange, Bot, BotEdit} from './interfaces';
 function authHeaders(token: string) {
     return {
       headers: {
@@ -21,6 +21,12 @@ export const api = {
     },
     async getBotsByUserExchange(token:string, userExchangeId:number):Promise<any>{
         return axios.get<Bot[]>(`${apiUrl}/${apiVersion}/bots/${userExchangeId}`, authHeaders(token));
+    },
+    async updateBot(token:string, botId:number, payload:BotEdit):Promise<any>{
+      return axios.patch(`${apiUrl}/${apiVersion}/bots/${botId}`, payload,authHeaders(token))
+    },
+    async deleteBot(token:string, botId:number):Promise<any>{
+      return axios.delete(`${apiUrl}/${apiVersion}/bots/${botId}`, authHeaders(token));
     }
 
 }

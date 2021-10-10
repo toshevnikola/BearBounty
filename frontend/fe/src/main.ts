@@ -29,7 +29,9 @@ const vuetify=new Vuetify({theme: {
         darkblueshade: "#308DC2",
         lightgray: "#BDBDBD",
         lightpink: "#FFCFE3",
-        white: "#FFFFFF"
+        white: "#FFFFFF",
+        marketchipstext:"#C5C5C5",
+        marketchipsbg:"#1C5D73"
       }
     }
   }});

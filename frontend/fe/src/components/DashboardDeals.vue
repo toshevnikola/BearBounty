@@ -6,7 +6,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class DashboardDeal extends Vue {}
+export default class DashboardDeals extends Vue {}
 </script>
 
 <style scoped>
