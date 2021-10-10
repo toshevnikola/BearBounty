@@ -3,7 +3,7 @@
 <template>
   <v-app>
     <div id="app">
-      <Landing></Landing>
+      <!-- <Landing></Landing> -->
       <!-- <div id="nav"> -->
       <!-- <router-link :to="{ name: 'Algorithms' }"></router-link> -->
       <!-- <router-link :to="{ name: 'Plans' }"></router-link> -->
@@ -12,25 +12,28 @@
         <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link> |
         <router-link :to="{ name: 'About' }">About</router-link> -->
       <!-- </div> -->
+      <Menu />
+      <router-view />
       <Footer />
-      <!-- <router-view /> -->
     </div>
   </v-app>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Landing from "./views/Landing.vue";
 import Footer from "./components/Footer.vue";
+import Menu from "./components/Menu.vue";
 @Component({
-  components: { Landing, Footer },
+  components: { Footer, Menu },
 })
 export default class App extends Vue {}
 </script>
 
 <style>
-body {
+#app {
   background-color: #dddddd;
+}
+body {
   margin: 0;
 }
 #app {

@@ -12,12 +12,18 @@
           <v-container>
             <v-row>
               <v-col cols="8" id="leftSide">
-                <v-col cols="10"><h1>Sign In</h1></v-col>
+                <v-col cols="10"><h1>Log In</h1></v-col>
                 <v-col cols="10"
-                  ><input type="text" autocomplete="off" placeholder="Email" />
+                  ><input
+                    v-model="email"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Email"
+                  />
                 </v-col>
                 <v-col cols="10"
                   ><input
+                    v-model="password"
                     type="password"
                     autocomplete="new-password"
                     placeholder="Password"
@@ -25,7 +31,7 @@
                 </v-col>
 
                 <v-col cols="10">
-                  <a id="login" @click="save()">Log In</a>
+                  <a id="login" @click="login()">Log In</a>
                 </v-col>
                 <v-col cols="10">
                   <div id="or">-or-</div>
@@ -53,16 +59,34 @@
 
 <script lang="ts">
 import { Component, Vue, Emit } from "vue-property-decorator";
+import { api } from "../api";
+import { saveAuthToken, saveRefreshToken } from "../utils";
+import router from "@/router";
 
 @Component
 export default class Login extends Vue {
   public isShown: boolean = true;
+  private email: string = "";
+  private password: string = "";
   @Emit("isLoginShown")
   public isLoginShown(show: boolean): boolean {
     return show;
   }
   public save(): void {
     this.isLoginShown(true);
+  }
+  public async login(): Promise<void> {
+    this.isLoginShown(true);
+    let response = await api.login(this.email, this.password);
+    const authToken = response.data.access_token;
+    const refreshToken = response.data.refresh_token;
+    if (authToken && refreshToken) {
+      saveAuthToken(authToken);
+      saveRefreshToken(refreshToken);
+      if (router.currentRoute.path === "/") {
+        router.push("/dashboard");
+      }
+    }
   }
 }
 </script>

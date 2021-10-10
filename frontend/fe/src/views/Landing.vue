@@ -12,9 +12,7 @@
         >
       </div>
       <div id="rightNav">
-        <router-link class="navItem" :to="{ name: 'Sign In' }"
-          >Sign In</router-link
-        >
+        <a class="navItem" @click="toggleLogin()">Log In</a>
         <router-link
           id="joinForFree"
           class="navItem"
@@ -25,7 +23,7 @@
     </div>
     <div id="headingCtaWrapper">
       <h1>Smart trading terminal<br />and crypto trading bots</h1>
-      <a @click="toggleLogin()" display="block" id="cta">Start trading</a>
+      <a display="block" id="cta">Start trading</a>
     </div>
     <Login @isLoginShown="toggleLogin()" v-if="isLoginShown"></Login>
   </div>
