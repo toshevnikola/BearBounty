@@ -6,7 +6,7 @@ import About from './views/About.vue'
 import Plans from './views/Plans.vue'
 import Charts from './views/Charts.vue'
 import Algorithms from './views/Algorithms.vue'
-
+import Exchange from './views/Exchange.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -20,6 +20,11 @@ const routes: Array<RouteConfig> = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path:'/exchanges',
+    name:'Exchange',
+    component:Exchange
   },
   {
     path: '/about',

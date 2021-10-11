@@ -8,7 +8,12 @@
       v-bind:selectedAccount="selectedAccount"
       v-if="selectedAccountLoaded == true && headerClickedSubMenu === 'Bots'"
     />
-    <DashboardDeals v-else-if="headerClickedSubMenu === 'Deals'" />
+    <DashboardDeals
+      v-bind:selectedAccount="selectedAccount"
+      v-else-if="
+        selectedAccountLoaded == true && headerClickedSubMenu === 'Deals'
+      "
+    />
   </div>
 </template>
 

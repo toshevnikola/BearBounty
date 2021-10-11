@@ -34,3 +34,12 @@ export interface Bot{
 export interface BotEdit{
     is_running?:boolean,
 }
+export interface Deal {
+    bot_id:number,
+    pair:string,
+    is_active:boolean,
+    created_at:string,
+    updated_at:string,
+    bot_name:string
+    // bot:Bot
+}

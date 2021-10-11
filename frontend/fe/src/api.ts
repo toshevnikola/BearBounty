@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl, apiVersion } from '@/env';
-import {UserExchange, Bot, BotEdit} from './interfaces';
+import {UserExchange, Bot, BotEdit, Deal} from './interfaces';
 function authHeaders(token: string) {
     return {
       headers: {
@@ -27,6 +27,9 @@ export const api = {
     },
     async deleteBot(token:string, botId:number):Promise<any>{
       return axios.delete(`${apiUrl}/${apiVersion}/bots/${botId}`, authHeaders(token));
+    },
+    async getDealsByExchange(token:string,exchangeId:number):Promise<any>{
+      return axios.get<Deal[]>(`${apiUrl}/${apiVersion}/deals/user_exchange/${exchangeId}`, authHeaders(token));
     }
 
 }

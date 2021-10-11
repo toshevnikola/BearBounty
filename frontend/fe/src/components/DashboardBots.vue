@@ -1,91 +1,120 @@
 <template>
-  <div id="botsContainer">
-    <div class="botCard" v-for="bot in bots" :key="bot.id">
-      <div class="botActions">
-        <div class="text-right">
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon color="primary" v-bind="attrs" v-on="on">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list color="marketchipstext">
-              <v-list-item>
-                <v-list-item-title
-                  class="marketchipsbg--text"
-                  style="cursor: pointer"
-                  @click="toggleIsRunning(bot)"
-                >
-                  <v-icon v-if="bot.is_running" class="marketchipsbg--text"
-                    >mdi-pause</v-icon
-                  >
-                  <v-icon v-else class="marketchipsbg--text"> mdi-play </v-icon>
-                  <span v-if="bot.is_running"> Pause</span>
-                  <span v-else>Start</span>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  class="marketchipsbg--text"
-                  style="cursor: pointer"
-                  @click="editBot(bot.id)"
-                >
-                  <v-icon class="marketchipsbg--text">mdi-pencil</v-icon>
-                  Edit
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  class="marketchipsbg--text"
-                  style="cursor: pointer"
-                  @click="deleteBot(bot)"
-                >
-                  <v-icon class="marketchipsbg--text">mdi-delete</v-icon>
-                  Delete
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  class="marketchipsbg--text"
-                  style="cursor: pointer"
-                  @click="deleteBot(bot.id)"
-                >
-                  <v-icon class="marketchipsbg--text">mdi-view-list</v-icon>
-                  View deals
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
+  <div id="container">
+    <div id="optionsContainer">
+      <div style="width: 50%; display: inline-block; float: left">
+        <h3 style="font-size: 24px">
+          <v-icon large color="#1C5D73">mdi-swap-vertical</v-icon> Created time
+        </h3>
+        <h3 style="font-size: 24px">
+          <v-icon large color="#1C5D73">mdi-filter</v-icon> All
+        </h3>
       </div>
       <div
-        class="botImgWrapper"
-        :class="{ activeBot: bot.is_running, inactiveBot: !bot.is_running }"
+        style="
+          width: 50%;
+          display: inline-block;
+          text-align: right;
+          height: 100%;
+          float: left;
+          padding-top: 20px;
+        "
       >
-        <img src="../assets/robot.png" />
+        <v-btn large color="#1C5D73" class="dddddd--text" id="addBotBtn">
+          Add Bot
+          <v-icon>mdi-plus-box</v-icon>
+        </v-btn>
       </div>
-      <div class="botTitleWrapper">
-        <h2 class="botTitle">{{ bot.name }}</h2>
-      </div>
-      <div class="detailsWrapper">
-        <span class="greenText">Type</span><br />
-        <span class="blueText">Signals based</span><br />
-        <span class="greenText">Markets</span><br />
-        <div class="markets">
-          <v-chip
-            v-for="market in bot.trading_pairs"
-            :key="market"
-            color="marketchipsbg"
-            class="marketchipstext--text market"
-          >
-            {{ market }}
-          </v-chip>
+    </div>
+    <div id="botsContainer">
+      <div class="botCard" v-for="bot in bots" :key="bot.id">
+        <div class="botActions">
+          <div class="text-right">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon color="primary" v-bind="attrs" v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list color="marketchipstext">
+                <v-list-item>
+                  <v-list-item-title
+                    class="marketchipsbg--text"
+                    style="cursor: pointer"
+                    @click="toggleIsRunning(bot)"
+                  >
+                    <v-icon v-if="bot.is_running" class="marketchipsbg--text"
+                      >mdi-pause</v-icon
+                    >
+                    <v-icon v-else class="marketchipsbg--text">
+                      mdi-play
+                    </v-icon>
+                    <span v-if="bot.is_running"> Pause</span>
+                    <span v-else>Start</span>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title
+                    class="marketchipsbg--text"
+                    style="cursor: pointer"
+                    @click="editBot(bot.id)"
+                  >
+                    <v-icon class="marketchipsbg--text">mdi-pencil</v-icon>
+                    Edit
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title
+                    class="marketchipsbg--text"
+                    style="cursor: pointer"
+                    @click="deleteBot(bot)"
+                  >
+                    <v-icon class="marketchipsbg--text">mdi-delete</v-icon>
+                    Delete
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-title
+                    class="marketchipsbg--text"
+                    style="cursor: pointer"
+                    @click="deleteBot(bot.id)"
+                  >
+                    <v-icon class="marketchipsbg--text">mdi-view-list</v-icon>
+                    View deals
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
         </div>
-        <span class="greenText">Allocated funds</span><br />
-        <span class="blueText">{{ bot.allocated_funds }}</span
-        ><br />
-        <span class="greenText">Base Coin</span><br />
-        <span class="blueText">{{ bot.base_coin }}</span>
+        <div
+          class="botImgWrapper"
+          :class="{ activeBot: bot.is_running, inactiveBot: !bot.is_running }"
+        >
+          <img src="../assets/robot.png" />
+        </div>
+        <div class="botTitleWrapper">
+          <h2 class="botTitle">{{ bot.name }}</h2>
+        </div>
+        <div class="detailsWrapper">
+          <span class="greenText">Type</span><br />
+          <span class="blueText">Signals based</span><br />
+          <span class="greenText">Markets</span><br />
+          <div class="markets">
+            <v-chip
+              v-for="market in bot.trading_pairs"
+              :key="market"
+              color="marketchipsbg"
+              class="marketchipstext--text market"
+            >
+              {{ market }}
+            </v-chip>
+          </div>
+          <span class="greenText">Allocated funds</span><br />
+          <span class="blueText">{{ bot.allocated_funds }}</span
+          ><br />
+          <span class="greenText">Base Coin</span><br />
+          <span class="blueText">{{ bot.base_coin }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -144,11 +173,9 @@ export default class DashboardBots extends Vue {
 <style scoped>
 #botsContainer {
   width: 100%;
-  margin-left: 10%;
-  padding-top: 10%;
 }
 .botCard {
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #c4c4c4;
   float: left;
   width: 300px;
@@ -207,5 +234,20 @@ export default class DashboardBots extends Vue {
   text-align: right;
   margin: 0;
   padding: 0;
+}
+#optionsContainer {
+  height: 100px;
+  margin-bottom: 10px;
+  width: 90%;
+}
+#container {
+  padding-top: 7%;
+  margin-left: 10%;
+}
+#addBotBtn {
+  text-transform: none;
+  font-size: 16px;
+  font-weight: normal;
+  font-family: Roboto;
 }
 </style>

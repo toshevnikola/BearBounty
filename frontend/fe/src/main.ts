@@ -31,7 +31,8 @@ const vuetify=new Vuetify({theme: {
         lightpink: "#FFCFE3",
         white: "#FFFFFF",
         marketchipstext:"#C5C5C5",
-        marketchipsbg:"#1C5D73"
+        marketchipsbg:"#1C5D73",
+        dddddd:"#DDDDDD",
       }
     }
   }});
