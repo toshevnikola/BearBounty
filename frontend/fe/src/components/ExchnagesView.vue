@@ -24,7 +24,7 @@
           color="#1C5D73"
           class="dddddd--text"
           id="addExchangeBtn"
-          @click="toggleAddExchange()"
+          @click="openAddExchange()"
         >
           Add Exchange
           <v-icon>mdi-plus-box</v-icon>
@@ -43,19 +43,19 @@
         </template>
       </v-data-table>
     </div>
-    <!-- <AddExchange
-      :addExchangeShown="toggleAddExchange()"
+    <AddExchange
+      @isAddExchangeShown="closeAddExchange()"
       v-if="isAddExchangeShown"
-    /> -->
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { api } from "@/api";
-import { UserExchange, Deal } from "@/interfaces";
+import { UserExchange } from "@/interfaces";
 import { Component, Prop, Vue } from "vue-property-decorator";
-// import AddExchange from "../components/AddExchange.vue";
-@Component({ components: {} })
+import AddExchange from "../components/AddExchange.vue";
+@Component({ components: { AddExchange } })
 export default class ExchangesView extends Vue {
   public exchanges: Array<UserExchange> = [];
   @Prop(Object) readonly selectedAccount!: UserExchange;
@@ -107,8 +107,13 @@ export default class ExchangesView extends Vue {
       console.log(this.exchanges);
     });
   }
-  public toggleAddExchange(): void {
-    this.isAddExchangeShown = !this.isAddExchangeShown;
+  public openAddExchange(): void {
+    this.isAddExchangeShown = true;
+    console.log("Exchange shown");
+  }
+  public closeAddExchange(): void {
+    this.isAddExchangeShown = false;
+    console.log("Exchange closed");
   }
 }
 </script>
