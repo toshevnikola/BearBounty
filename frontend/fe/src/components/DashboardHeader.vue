@@ -12,7 +12,10 @@
         {{ subMenu.btn }}
       </button>
     </div>
-    <div id="rightHeader" v-if="accountsFetched">
+    <div
+      id="rightHeader"
+      v-if="accountsFetched && selectedAccount != null && accounts.length > 0"
+    >
       <v-select
         v-model="selectedAccount"
         @input="changeAccount"
@@ -27,6 +30,9 @@
       ></v-select>
       <h3 id="accountName">{{ selectedAccount.exchange.name }}</h3>
       <h3 id="accountBalance">Balance {{ "$" }}</h3>
+    </div>
+    <div style="margin-top: 30px" v-else-if="accounts.length == 0">
+      Connect to exchange before continuing
     </div>
     <div v-else>
       <v-progress-circular
@@ -60,7 +66,9 @@ export default class DashboardHeader extends Vue {
     const token = localStorage.authToken;
     await api.getUserExchanges(token).then((res: any) => {
       this.accounts = res.data;
-      this.changeAccount(this.accounts[0]);
+      if (this.accounts.length > 0) {
+        this.changeAccount(this.accounts[0]);
+      }
       this.accountsFetched = true;
     });
   }

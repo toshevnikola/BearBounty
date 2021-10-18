@@ -19,7 +19,13 @@
           padding-top: 20px;
         "
       >
-        <v-btn large color="#1C5D73" class="dddddd--text" id="addBotBtn">
+        <v-btn
+          @click="openAddBot()"
+          large
+          color="#1C5D73"
+          class="dddddd--text"
+          id="addBotBtn"
+        >
           Add Bot
           <v-icon>mdi-plus-box</v-icon>
         </v-btn>
@@ -90,7 +96,7 @@
           class="botImgWrapper"
           :class="{ activeBot: bot.is_running, inactiveBot: !bot.is_running }"
         >
-          <img src="../assets/robot.png" />
+          <img src="../assets/robot_orange.png" />
         </div>
         <div class="botTitleWrapper">
           <h2 class="botTitle">{{ bot.name }}</h2>
@@ -117,6 +123,7 @@
         </div>
       </div>
     </div>
+    <AddBot @isAddBotShown="closeAddBot()" v-if="isAddBotShown" />
   </div>
 </template>
 
@@ -124,12 +131,14 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Bot, UserExchange, BotEdit } from "../interfaces";
 import { api } from "../api";
-@Component
+import AddBot from "../components/AddBot.vue";
+@Component({ components: { AddBot } })
 export default class DashboardBots extends Vue {
   public bots: Array<Bot> = [];
   @Prop(Object) readonly selectedAccount!: UserExchange;
   public botsFetched: boolean = false;
   public token: string = localStorage.authToken;
+  public isAddBotShown: boolean = false;
 
   public botActionOptions: Array<any> = [
     { title: "Pause", icon: "mdi-pause" },
@@ -152,6 +161,13 @@ export default class DashboardBots extends Vue {
       this.bots = this.bots.filter((b) => b !== bot);
     });
   }
+  public openAddBot(): void {
+    this.isAddBotShown = true;
+  }
+  public closeAddBot(): void {
+    this.isAddBotShown = false;
+  }
+
   public async toggleIsRunning(bot: Bot): Promise<void> {
     const payload: BotEdit = {
       is_running: !bot.is_running,

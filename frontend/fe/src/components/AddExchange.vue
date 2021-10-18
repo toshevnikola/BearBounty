@@ -15,13 +15,13 @@
                 <v-col cols="10"><span>Connect to New Exchange</span></v-col>
                 <v-col cols="10">
                   <v-select
-                    v-model="selectedAccount"
-                    @input="changeAccount"
+                    v-model="selectedExchange"
+                    @input="changeExchange"
                     id="selection"
                     return-object
                     style="display: block; width: 70%"
-                    :items="accounts"
-                    item-text="exchange.name"
+                    :items="exchanges"
+                    item-text="name"
                     filled
                     label="Exchange"
                     persistent-hint
@@ -33,9 +33,9 @@
                 </v-col>
                 <v-col cols="10">
                   <input
-                    v-model="email"
+                    v-model="apiKey"
                     type="text"
-                    autocomplete="off"
+                    autocomplete="new-password"
                     placeholder="Enter Api Key"
                   />
                 </v-col>
@@ -44,15 +44,20 @@
                 </v-col>
                 <v-col cols="10">
                   <input
-                    v-model="password"
-                    type="password"
+                    v-model="secretKey"
+                    type="text"
                     autocomplete="new-password"
                     placeholder="Enter Secret Key"
+                    style="text-security: disc"
                   />
                 </v-col>
 
-                <v-col cols="10">
-                  <a id="login" @click="close()">Add</a>
+                <v-col cols="8">
+                  <p v-if="errorMsg != ''" style="color: #ff3d3d">
+                    {{ errorMsg }}
+                  </p>
+                  <a id="cancel" @click="close()">Cancel</a>
+                  <a id="add" @click="addUserExchange()">Add</a>
                 </v-col>
               </v-col>
               <v-col cols="4" id="rightSide">
@@ -67,11 +72,45 @@
 </template>
 
 <script lang="ts">
+import { Exchange } from "@/interfaces";
 import { Component, Emit, Vue } from "vue-property-decorator";
-
+import { api } from "../api";
 @Component
 export default class AddExchange extends Vue {
   public dialog: boolean = true;
+  public errorMsg: string = "";
+  public apiKey: string = "";
+  public secretKey: string = "";
+  public exchanges: Array<Exchange> = [];
+  public selectedExchange: Exchange | null = null;
+  public mounted(): void {
+    api.getExchanges().then((res) => {
+      this.exchanges = res.data;
+      this.selectedExchange = this.exchanges[0];
+    });
+  }
+  public changeExchange(e: Exchange): void {
+    this.selectedExchange = e;
+  }
+  public async addUserExchange(): Promise<void> {
+    const token: string = localStorage.authToken;
+    console.log(token);
+    api
+      .addUserExchange(
+        token,
+        this.selectedExchange!.id,
+        this.apiKey,
+        this.secretKey
+      )
+      .then((res) => {
+        console.log(res);
+        this.isExchangeShown(true);
+      })
+      .catch((e) => {
+        console.log(e.response.status);
+        this.errorMsg = e.response.data.detail;
+      });
+  }
   @Emit("isAddExchangeShown")
   public isExchangeShown(show: boolean): boolean {
     console.log("Emitting event");
@@ -118,15 +157,27 @@ input:focus {
   padding-left: 5%;
   padding-top: 5%;
 }
-#login {
-  width: 395px;
+#add {
+  width: 40%;
   font-size: 20px;
-  display: block;
-  background-color: #f0943d;
+  display: inline-block;
+  background: #f0943d;
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  float: left;
+  text-align: center;
+  padding: 25px 0;
+  margin-top: 1%;
+  margin-left: 10px;
+}
+
+#cancel {
+  width: 40%;
+  font-size: 20px;
+  display: inline-block;
+  color: #113c4a;
+  text-decoration: none;
+  border-radius: 5px;
   text-align: center;
   padding: 25px 0;
   margin-top: 1%;
