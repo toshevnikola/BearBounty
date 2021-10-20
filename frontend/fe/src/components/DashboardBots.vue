@@ -48,9 +48,9 @@
                     style="cursor: pointer"
                     @click="toggleIsRunning(bot)"
                   >
-                    <v-icon v-if="bot.is_running" class="marketchipsbg--text"
-                      >mdi-pause</v-icon
-                    >
+                    <v-icon v-if="bot.is_running" class="marketchipsbg--text">
+                      mdi-pause
+                    </v-icon>
                     <v-icon v-else class="marketchipsbg--text">
                       mdi-play
                     </v-icon>
@@ -115,9 +115,8 @@
               {{ market }}
             </v-chip>
           </div>
-          <span class="greenText">Allocated funds</span><br />
-          <span class="blueText">{{ bot.allocated_funds }}</span
-          ><br />
+          <span class="greenText">Allocated funds</span> <br />
+          <span class="blueText">{{ bot.allocated_funds }}</span> <br />
           <span class="greenText">Base Coin</span><br />
           <span class="blueText">{{ bot.base_coin }}</span>
         </div>

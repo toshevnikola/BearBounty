@@ -6,6 +6,7 @@ import Vuetify from 'vuetify';
 import './plugins/vuetify';
 import './plugins/vee-validate';
 
+
 const vuetify=new Vuetify({theme: {
     themes: {
       light: {
@@ -37,6 +38,7 @@ const vuetify=new Vuetify({theme: {
     }
   }});
 Vue.config.productionTip = false;
+
 new Vue({
   router,
   vuetify,
