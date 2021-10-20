@@ -34,6 +34,24 @@ export interface Bot{
 export interface BotEdit{
     is_running?:boolean,
 }
+export interface BotCreate{
+    name:string,
+    trading_pairs:Array<string>,
+    base_coin:string,
+    base_order_amount:number,
+    safety_order_amount:number,
+    max_safety_orders:number,
+    max_active_safety_orders:number,
+    safety_order_price_deviation_pct:number,
+    safety_order_price_deviation_scale:number,
+    allocated_funds:number,
+    consider_overall_sentiment:boolean,
+    stop_loss_pct:number,
+    take_profit_pct:number,
+    is_running:boolean,
+    in_deal:boolean,
+    user_exchange_id:number
+}
 export interface Deal {
     bot_id:number,
     pair:string,

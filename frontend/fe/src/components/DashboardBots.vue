@@ -122,7 +122,11 @@
         </div>
       </div>
     </div>
-    <AddBot @isAddBotShown="closeAddBot()" v-if="isAddBotShown" />
+    <AddBot
+      :selectedAccount="selectedAccount"
+      @isAddBotShown="closeAddBot()"
+      v-if="isAddBotShown"
+    />
   </div>
 </template>
 
@@ -217,7 +221,7 @@ export default class DashboardBots extends Vue {
   float: left;
   /* display: inline-block; */
   color: #1c5d73;
-  font-size: 32px;
+  font-size: 28px;
 }
 .botTitleWrapper {
   height: 90px;

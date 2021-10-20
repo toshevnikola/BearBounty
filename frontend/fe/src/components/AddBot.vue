@@ -14,9 +14,16 @@
                 <h2>Descriptive settings</h2>
                 <br />
                 <label>Name</label>
-                <v-text-field placeholder="Example Bot Name" />
+                <v-text-field
+                  placeholder="Example Bot Name"
+                  v-model="botName"
+                />
                 <label>Description</label>
-                <v-textarea placeholder="Example Bot Description" rows="2" />
+                <v-textarea
+                  placeholder="Example Bot Description"
+                  rows="2"
+                  v-model="botDescription"
+                />
                 <label>Avatar</label>
                 <v-card style="background: #ebebeb">
                   <v-list-item
@@ -61,7 +68,7 @@
                 <v-text-field
                   v-model="maxActiveDeals"
                   name="maxActiveDeals"
-                  :value="maxDealsValue"
+                  :value="maxActiveDeals"
                   placeholder="1"
                 />
 
@@ -92,7 +99,7 @@
                 <v-text-field
                   v-if="stopLossSwitch"
                   style="width: 30%; display: inline-block"
-                  v-model="stopLossPct"
+                  v-model.number="stopLossPct"
                   :value="stopLossPct"
                   placeholder="1.00"
                   suffix="%"
@@ -172,9 +179,9 @@
                 <LineChart :key="chartId" :chartData="datacollection" />
                 <h4>Total required amount: {{ totalRequiredAmount }} USDT</h4>
                 <h4>Account Balance: 52.513123 USDT</h4>
-                <v-btn width="100%" @click="createBot()" color="secondary"
-                  >Create Bot</v-btn
-                >
+                <v-btn width="100%" @click="createBot()" color="secondary">
+                  Create Bot
+                </v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -186,14 +193,20 @@
 
 <script lang="ts">
 import LineChart from "./Linechart.vue.js";
-import { Component, Emit, Vue } from "vue-property-decorator";
-import { component } from "vue/types/umd";
-
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import { BotCreate, UserExchange } from "../interfaces";
+import { api } from "../api";
 @Component({ components: { LineChart } })
 export default class AddBot extends Vue {
+  @Prop(Object) readonly selectedAccount!: UserExchange;
+  public token: string = localStorage.authToken;
   public dialog: boolean = true;
-  public maxActiveDeals: number = 1;
+  public botName: string = "";
+  public botDescription: string = "";
+  public selectedAvatar: any = "";
   public baseCoin: string = "USDT";
+  public maxActiveDeals: number = 1;
+  public stopLossSwitch: boolean = false;
   public targetProfit: number = 1.25;
   public stopLossPct: number = 10.0;
   public baseOrderAmount: number = 10.0;
@@ -202,21 +215,32 @@ export default class AddBot extends Vue {
   public maxNumberOfSafetyOrders: number = 3;
   public priceDeviationforSafetyOrdersPct: number = 2.0;
   public safetyOrderAmountScale: number = 1.25;
-  public chartId = 123123123;
-  public createBot(): void {
-    console.log(this.maxActiveDeals);
-    console.log(this.baseCoin);
-    console.log(this.targetProfit);
-    console.log(this.stopLossPct);
-    console.log(this.baseOrderAmount);
-    console.log(this.safetyOrderAmount);
-    console.log(this.safetyOrderStepScale);
-    console.log(this.maxNumberOfSafetyOrders);
-    console.log(this.priceDeviationforSafetyOrdersPct);
-    console.log(this.safetyOrderAmountScale);
+  public chartId = 1;
+  public async createBot(): Promise<void> {
+    const payload: BotCreate = {
+      name: this.botName,
+      trading_pairs: this.selectedMarkets,
+      base_coin: this.baseCoin,
+      base_order_amount: this.baseOrderAmount,
+      safety_order_amount: this.safetyOrderAmount,
+      max_safety_orders: this.maxNumberOfSafetyOrders,
+      max_active_safety_orders: this.maxNumberOfSafetyOrders,
+      safety_order_price_deviation_pct: this.priceDeviationforSafetyOrdersPct,
+      safety_order_price_deviation_scale: this.safetyOrderStepScale,
+      allocated_funds: this.totalRequiredAmount,
+      consider_overall_sentiment: false,
+      stop_loss_pct: this.stopLossPct,
+      take_profit_pct: this.targetProfit,
+      is_running: true,
+      in_deal: false,
+      user_exchange_id: this.selectedAccount.id,
+    };
+
+    await api.createBot(this.token, payload).then((res) => {
+      console.log(res.data);
+      this.close();
+    });
   }
-  public maxDealsValue: number = 1;
-  public stopLossSwitch: boolean = false;
   public avatars: Array<any> = [
     { path: "robot_purple.png", selected: true },
     { path: "robot_orange.png", selected: false },
@@ -239,7 +263,6 @@ export default class AddBot extends Vue {
     "SHIBUDST",
     "BTCGUSDT",
   ];
-  public selectedAvatar: any = "";
   public orderAmounts: Array<number> = [];
   public orderLabels: Array<number> = [];
   public cummulativeOrderAmounts: Array<number> = [];
@@ -275,6 +298,7 @@ export default class AddBot extends Vue {
   }
   public mounted(): void {
     this.setSelected(this.avatars[0]);
+    this.setMaxActiveDealsValue();
     this.updateChart();
   }
   public updateChart(): void {
@@ -287,8 +311,8 @@ export default class AddBot extends Vue {
     this.getTotalRequiredAmount();
     this.reRenderChart();
   }
-  public setMaxDealsValue(): void {
-    this.maxDealsValue = this.selectedMarkets.length;
+  public setMaxActiveDealsValue(): void {
+    this.maxActiveDeals = this.selectedMarkets.length;
   }
   public setOrderAmounts(): void {
     this.orderAmounts[0] = this.baseOrderAmount;
@@ -326,10 +350,6 @@ export default class AddBot extends Vue {
   }
   public close(): void {
     this.isBotShown(true);
-  }
-
-  public addBot(): void {
-    console.log("close");
   }
 }
 </script>
