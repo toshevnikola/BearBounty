@@ -78,6 +78,7 @@
                   style="width: 30%; display: inline-block"
                   name="targetProfit"
                   :value="targetProfit"
+                  @input="updateChart()"
                   placeholder="1.25"
                   suffix="%"
                 />
@@ -177,8 +178,12 @@
                 <br />
                 <label>Amount used per order</label>
                 <LineChart :key="chartId" :chartData="datacollection" />
-                <h4>Total required amount: {{ totalRequiredAmount }} USDT</h4>
-                <h4>Account Balance: 52.513123 USDT</h4>
+                <h4>
+                  Total required amount:
+                  {{ parseFloat(totalRequiredAmount).toPrecision(6) }}
+                  USDT
+                </h4>
+                <h4>Account Balance: {{ selectedAccount.balance }} USDT</h4>
                 <v-btn width="100%" @click="createBot()" color="secondary">
                   Create Bot
                 </v-btn>
@@ -266,20 +271,27 @@ export default class AddBot extends Vue {
   public orderAmounts: Array<number> = [];
   public orderLabels: Array<number> = [];
   public cummulativeOrderAmounts: Array<number> = [];
+  public potentialProfits: Array<number> = [];
   public datacollection: any = {
     labels: this.orderLabels,
     datasets: [
       {
-        label: "Single",
+        label: "Orders",
         pointBackgroundColor: "#f0943d",
         borderColor: "#f0943d",
         data: this.orderAmounts,
       },
       {
-        label: "Cummulative",
+        label: "Cummulative Required",
         pointBackgroundColor: "#113c4a",
         borderColor: "#113c4a",
         data: this.cummulativeOrderAmounts,
+      },
+      {
+        label: "Profits",
+        pointBackgroundColor: "#2e6361",
+        borderColor: "#2e6361",
+        data: this.potentialProfits,
       },
     ],
   };
@@ -305,6 +317,7 @@ export default class AddBot extends Vue {
     this.orderAmounts.length = this.maxNumberOfSafetyOrders;
     this.orderLabels.length = this.maxNumberOfSafetyOrders;
     this.cummulativeOrderAmounts.length = this.maxNumberOfSafetyOrders;
+    this.potentialProfits.length = this.maxNumberOfSafetyOrders;
     this.setOrderAmounts();
     this.setOrderLabels();
     this.setCummulativeOrderAmounts();
@@ -332,6 +345,7 @@ export default class AddBot extends Vue {
         // console.log("k=", k);
       }
       this.cummulativeOrderAmounts[i] = k;
+      this.potentialProfits[i] = (this.targetProfit / 100) * k;
     }
     // console.log(this.cummulativeOrderAmounts);
   }
