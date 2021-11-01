@@ -36,7 +36,7 @@
                   <div id="or">-or-</div>
                 </v-col>
                 <v-col cols="10">
-                  <a id="loginGoogle" @click="save()"
+                  <a id="loginGoogle" @click="singInGoogle()"
                     ><img
                       style="position: relative; top: 5px"
                       src="../assets/google_small.png"
@@ -67,6 +67,7 @@ export default class Login extends Vue {
   public isShown: boolean = true;
   private email: string = "";
   private password: string = "";
+  $gAuth: any;
   @Emit("isLoginShown")
   public isLoginShown(show: boolean): boolean {
     return show;
@@ -86,6 +87,31 @@ export default class Login extends Vue {
         router.push("/dashboard");
       }
     }
+  }
+  public sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  public async singInGoogle(): Promise<any> {
+    const googleUser = await this.$gAuth.signIn();
+    console.log(googleUser);
+    // console.log("TOKEN", googleUser.getId());
+    // console.log(googleUser.getId());
+    // console.log(googleUser.getBasicProfile());
+    let resp = googleUser.getAuthResponse();
+    console.log(resp["id_token"]);
+    const token = resp["id_token"];
+    await this.sleep(1500);
+    await api.googleLogin(token).then((res) => {
+      if (res.data) {
+        const authToken = res.data.access_token;
+        const refreshToken = res.data.refresh_token;
+        saveAuthToken(authToken);
+        saveRefreshToken(refreshToken);
+        if (router.currentRoute.path === "/") {
+          router.push("/dashboard");
+        }
+      }
+    });
   }
 }
 </script>

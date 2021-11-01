@@ -35,12 +35,19 @@ def create_user_exchange(
             status_code=400,
             detail="Already connected to this exchange",
         )
-    else:
-        "CONNECT TO PROVIDED EXCHANGE"
-
-        user_exchange = crud.user_exchange.create_with_user(
-            db, obj_in=user_exchange_in, user_id=current_user
-        )
+    balances = crud.exchange.get_client_balance(
+        db=db,
+        exchange_id=user_exchange_in.exchange_id,
+        api_key=user_exchange_in.api_key,
+        api_secret=user_exchange_in.api_secret,
+    )
+    if not balances:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    user_exchange = crud.user_exchange.create_with_user(
+        db,
+        obj_in=user_exchange_in,
+        user_id=current_user,
+    )
 
     return user_exchange
 
@@ -52,9 +59,32 @@ def get_user_exchanges(
     *, Authorize: AuthJWT = Depends(), db: Session = Depends(deps.get_db)
 ):
     current_user = get_current_user(Authorize)
+
     res = crud.user_exchange.get_by_user(db, user_id=current_user)
+
     return res
-    # return crud.user_exchange.get_by_user(db, user_id=current_user)
+
+
+@router.get(
+    "/{id}", response_model=schemas.UserExchange, status_code=status.HTTP_200_OK
+)
+def get_user_exchanges(
+    *,
+    Authorize: AuthJWT = Depends(),
+    id: int,
+    refresh: bool = False,
+    db: Session = Depends(deps.get_db),
+):
+    current_user = get_current_user(Authorize)
+    if refresh:
+        res = crud.user_exchange.get_with_refreshed_assets(db=db, id=id)
+    else:
+        res = crud.user_exchange.get(db, id=id)
+    if not res:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    if res.user_id != current_user:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+    return res
 
 
 @router.delete(

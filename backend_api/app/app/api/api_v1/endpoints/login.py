@@ -1,6 +1,7 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException
+import pydantic
+from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
@@ -8,15 +9,18 @@ import app.crud as crud
 from app.api import deps
 from app.core.config import settings
 from app.core.security import denylist
-
-from app.schemas.user import UserLogin
+from app.schemas.token import JWTTokenResponse
+from app.schemas.user import UserLogin, User, NoPasswordUserCreate
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from schemas.token import Token
 
 router = APIRouter()
 
 
 @router.post("/get-tokens")
 async def login(
-    user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()
+        user: UserLogin, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()
 ):
     user = crud.user.authenticate(db, email=user.email, password=user.password)
     if not user:
@@ -30,6 +34,31 @@ async def login(
         subject=user.id, expires_time=settings.REFRESH_TOKEN_EXPIRE_SECONDS
     )
     return {"access_token": access_token, "refresh_token": refresh_token}
+
+
+@router.post("/google-login", response_model=JWTTokenResponse)
+async def google_login(
+        token: Token, db: Session = Depends(deps.get_db), Authorize: AuthJWT = Depends()
+):
+    info = id_token.verify_oauth2_token(
+        token.token, requests.Request(), settings.GOOGLE_CLIENT_ID
+    )
+    user_id = info.get("sub", None)
+    email = info.get('email', None)
+    first_name = info.get('given_name', None)
+    user = crud.user.retrieve_user(db, provider="google", provider_user_id=user_id)
+    if not user:
+        obj_in = NoPasswordUserCreate(email=email, provider="google", provider_id=user_id, first_name=first_name,
+                                      )
+        user = crud.user.create_without_pass(db, obj_in=obj_in)
+
+    access_token = Authorize.create_access_token(
+        subject=user.id, expires_time=settings.ACCESS_TOKEN_EXPIRE_SECONDS
+    )
+    refresh_token = Authorize.create_refresh_token(
+        subject=user.id, expires_time=settings.REFRESH_TOKEN_EXPIRE_SECONDS
+    )
+    return JWTTokenResponse(access_token=access_token, refresh_token=refresh_token)
 
 
 @router.post("/refresh")

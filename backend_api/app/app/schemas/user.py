@@ -18,6 +18,12 @@ class UserCreate(UserBase):
     confirm_password: str
 
 
+class NoPasswordUserCreate(UserBase):
+    email: EmailStr
+    provider: str
+    provider_id: str
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str

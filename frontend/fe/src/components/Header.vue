@@ -17,9 +17,12 @@
         persistent-hint
       ></v-select>
       <h3 id="accountName">{{ selectedAccount.exchange.name }}</h3>
-      <h3 id="accountBalance">Balance {{ "$" }}</h3>
+      <h3 id="accountBalance">Balance ${{ totalAccountBalance() }}</h3>
     </div>
-    <div style="margin-top: 30px" v-else-if="accounts.length == 0">
+    <div
+      style="margin-top: 30px"
+      v-else-if="accountsFetched && accounts.length == 0"
+    >
       Connect to exchange before continuing
     </div>
     <div v-else>
@@ -54,6 +57,13 @@ export default class Header extends Vue {
       }
       this.accountsFetched = true;
     });
+  }
+  public totalAccountBalance(): number {
+    let total = 0;
+    this.selectedAccount?.assets.forEach((element) => {
+      total += (element.free * element.price) | 1;
+    });
+    return total;
   }
   @Emit("changeSelectedAccount")
   public changeAccount(event: any): void {

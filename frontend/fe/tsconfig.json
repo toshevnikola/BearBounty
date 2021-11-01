@@ -33,7 +33,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/components/Linechart.vue.ts"  ],
   "exclude": [
     "node_modules"
   ]

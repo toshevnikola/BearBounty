@@ -41,3 +41,4 @@ class UserExchangeInDB(UserExchangeInDBBase):
 # Additional properties to return via API
 class UserExchange(UserExchangeInDBBase):
     exchange: Exchange
+    assets: Optional[list]

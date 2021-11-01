@@ -39,3 +39,5 @@ typing-extensions==3.10.0.2
 uvicorn==0.15.0
 zipp==3.5.0
 tenacity==8.0.1
+python-binance
+google-auth

@@ -1,8 +1,8 @@
-"""Added Exchange model
+"""Added orders-deal relationship
 
-Revision ID: 00a37a693ca5
-Revises: e9d4c28ec974
-Create Date: 2021-09-07 01:30:43.881756
+Revision ID: d3be155ba0a2
+Revises: b62cfa90cb12
+Create Date: 2021-10-26 02:44:29.898218
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "00a37a693ca5"
-down_revision = "e9d4c28ec974"
+revision = "d3be155ba0a2"
+down_revision = "b62cfa90cb12"
 branch_labels = None
 depends_on = None
 

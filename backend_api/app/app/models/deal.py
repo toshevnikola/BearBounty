@@ -9,6 +9,8 @@ from sqlalchemy import (
     Float,
     ForeignKey,
 )
+from sqlalchemy.orm import relationship
+
 from app.db.base_class import Base
 
 from app.models.dca_bot import DCABot  # noqa
@@ -23,3 +25,6 @@ class Deal(Base):
     updated_at = Column(
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
+    bot = relationship("DCABot", back_populates="deals")
+    # user_exchange = relationship("UserExchange", back_populates="exchange")
+    orders = relationship("Order", back_populates="deal")

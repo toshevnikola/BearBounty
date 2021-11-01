@@ -7,6 +7,7 @@ import Plans from './views/Plans.vue'
 import Charts from './views/Charts.vue'
 import Algorithms from './views/Algorithms.vue'
 import Exchange from './views/Exchange.vue'
+import Statistics from './views/Statistics.vue'
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
@@ -43,8 +44,13 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/charts',
-    name: 'Charts',
+    name: 'Cryptocurrencies',
     component:Charts
+  },
+  {
+    path:'/statistics',
+    name:'Statistics',
+    component:Statistics
   }
   
 ]

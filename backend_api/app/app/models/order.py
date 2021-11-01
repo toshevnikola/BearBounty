@@ -10,10 +10,12 @@ from sqlalchemy import (
     ForeignKey,
     Enum,
 )
+from sqlalchemy.orm import relationship
+
 from app.db.base_class import Base
 
 from app.models.deal import Deal  # noqa
-from app.constants import OrderStatusEnum
+from app.constants import OrderStatusEnum, OrderTypeEnum
 
 
 class Order(Base):
@@ -22,8 +24,12 @@ class Order(Base):
     amount = Column(Float, nullable=False)
     fee = Column(Float, nullable=False)
     status = Column(Enum(OrderStatusEnum))
+    type = Column(Enum(OrderTypeEnum))
+    exchange_order_id = Column(Integer)
+
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(
         DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
     price = Column(Float, nullable=False)
+    deal = relationship("Deal", back_populates="orders")

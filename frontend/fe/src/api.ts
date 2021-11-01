@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl, apiVersion } from '@/env';
-import {UserExchange, Bot, BotEdit, Deal, Exchange, BotCreate} from './interfaces';
+import {UserExchange, Bot, BotEdit, Deal, Exchange, BotCreate,CoinMarketCapResponse} from './interfaces';
 function authHeaders(token: string) {
     return {
       headers: {
@@ -22,8 +22,8 @@ export const api = {
     async getBotsByUserExchange(token:string, userExchangeId:number):Promise<any>{
         return axios.get<Bot[]>(`${apiUrl}/${apiVersion}/bots/${userExchangeId}`, authHeaders(token));
     },
-    async updateBot(token:string, botId:number, payload:BotEdit):Promise<any>{
-      return axios.patch(`${apiUrl}/${apiVersion}/bots/${botId}/`, payload,authHeaders(token))
+    async updateBot(token:string, payload:BotEdit):Promise<any>{
+      return axios.patch(`${apiUrl}/${apiVersion}/bots/${payload.id}/`,payload ,authHeaders(token))
     },
     async deleteBot(token:string, botId:number):Promise<any>{
       return axios.delete(`${apiUrl}/${apiVersion}/bots/${botId}`, authHeaders(token));
@@ -42,6 +42,16 @@ export const api = {
       console.log(payload);
       return axios.post(`${apiUrl}/${apiVersion}/user_exchanges/`, payload, authHeaders(token))
     },
+    async refreshAssets(token:string, userExchangeId:number){
+      return axios.get<UserExchange>(`${apiUrl}/${apiVersion}/user_exchanges/${userExchangeId}/?refresh=true`, authHeaders(token));
+    },
+    async getCurrencies(token:string, exchangeId:string):Promise<any>{
+      return axios.get<CoinMarketCapResponse>(`${apiUrl}/${apiVersion}/cryptocurrencies/?exchange_id=${exchangeId}`, authHeaders(token));
+    },
+    async googleLogin(token:string):Promise<any>{
+      const payload={"token":token}
+      return axios.post(`${apiUrl}/${apiVersion}/login/google-login/`, payload);
+    }
     
 
 }

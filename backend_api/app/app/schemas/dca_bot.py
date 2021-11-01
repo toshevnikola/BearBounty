@@ -6,6 +6,8 @@ from pydantic import BaseModel
 # Shared properties
 class DCABotBase(BaseModel):
     name: Optional[str] = None
+    description: Optional[str] = None
+    avatar_color: Optional[str] = None
     trading_pairs: List[str] = []
     base_coin: Optional[str] = None
     base_order_amount: Optional[float] = None
@@ -25,6 +27,8 @@ class DCABotBase(BaseModel):
 # Properties to receive via API on creation
 class DCABotCreate(DCABotBase):
     name: str
+    description: str
+    avatar_color: str
     trading_pairs: List[str]
     base_coin: str
     base_order_amount: float
@@ -43,6 +47,8 @@ class DCABotCreate(DCABotBase):
 # Properties to receive via API on update
 class DCABotUpdate(DCABotBase):
     name: Optional[str]
+    description: Optional[str]
+    avatar_color: Optional[str]
     trading_pairs: Optional[List[str]]
     base_coin: Optional[str]
     base_order_amount: Optional[float]

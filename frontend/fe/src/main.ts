@@ -5,6 +5,7 @@ import 'vuetify/dist/vuetify.min.css';
 import Vuetify from 'vuetify';
 import './plugins/vuetify';
 import './plugins/vee-validate';
+import GAuth from 'vue-google-oauth2'
 
 
 const vuetify=new Vuetify({theme: {
@@ -25,8 +26,8 @@ const vuetify=new Vuetify({theme: {
         darkblue: "#1E2D56",
         gray: "#909090",
         neutralgray: "#9BA6C1",
-        green: "#2ED47A",
-        red: "#FF5c4E",
+        green: "#489258",
+        red: "#ff3d3d",
         darkblueshade: "#308DC2",
         lightgray: "#BDBDBD",
         lightpink: "#FFCFE3",
@@ -37,8 +38,14 @@ const vuetify=new Vuetify({theme: {
       }
     }
   }});
-Vue.config.productionTip = false;
 
+const gauthOption = {
+  clientId: '148971071468-tq52cumdc82n6slf9tj0j3vu2fpgqj0s.apps.googleusercontent.com',
+  scope: 'email',
+  prompt: 'consent'
+}
+Vue.use(GAuth, gauthOption)
+Vue.config.productionTip = false;
 new Vue({
   router,
   vuetify,

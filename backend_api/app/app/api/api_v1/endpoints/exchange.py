@@ -13,9 +13,9 @@ router = APIRouter()
 
 @router.post("/", response_model=schemas.Exchange, status_code=status.HTTP_201_CREATED)
 def create_exchange(
-        *,
-        db: Session = Depends(deps.get_db),
-        exchange_in: schemas.ExchangeCreate,
+    *,
+    db: Session = Depends(deps.get_db),
+    exchange_in: schemas.ExchangeCreate,
 ) -> Any:
     """
     Create new exchange.

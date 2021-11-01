@@ -9,6 +9,8 @@ from sqlalchemy import (
     Float,
     ForeignKey,
 )
+from sqlalchemy.orm import relationship
+
 from app.db.base_class import Base
 
 from app.models.user_exchange import UserExchange  # noqa
@@ -17,6 +19,7 @@ from app.models.user_exchange import UserExchange  # noqa
 class DCABot(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    description = Column(String)
     required_balance = Column(Float, default=True)
     base_coin = Column(String, nullable=False)
     base_order_amount = Column(Float, nullable=False)
@@ -36,4 +39,6 @@ class DCABot(Base):
     )
     is_running = Column(Boolean, default=True)
     in_deal = Column(Boolean, default=False)
+    avatar_color = Column(String, default="orange")
     user_exchange_id = Column(Integer, ForeignKey(UserExchange.id), index=True)
+    deals = relationship("Deal", back_populates="bot")

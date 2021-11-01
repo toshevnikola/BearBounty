@@ -1,8 +1,8 @@
-"""Added DCA_Bot model
+"""Added orders-deal relationship
 
-Revision ID: 57a74360a785
-Revises: 8a5ef916e5ba
-Create Date: 2021-09-11 12:47:54.647857
+Revision ID: b62cfa90cb12
+Revises: 217db93e8ba5
+Create Date: 2021-10-26 02:19:34.765403
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "57a74360a785"
-down_revision = "8a5ef916e5ba"
+revision = "b62cfa90cb12"
+down_revision = "217db93e8ba5"
 branch_labels = None
 depends_on = None
 

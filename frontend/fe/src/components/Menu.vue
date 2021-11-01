@@ -1,48 +1,41 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 <template>
   <div>
-    <!-- <v-navigation-drawer id="drawer" :mini-variant="miniDrawer" fixed>
+    <v-navigation-drawer id="drawer" :mini-variant="miniDrawer" fixed>
       <div id="topNav">
-        <div class="iconWrapper" id="activeIconWrapper">
+        <div
+          v-for="option in menuOptions"
+          :key="option.name"
+          class="iconWrapper"
+          v-bind:class="{ activeIconWrapper: option.isActive }"
+        >
           <v-tooltip bottom open-delay="300" color="#f0943d">
             <template v-slot:activator="{ on, attrs }">
-              <v-icon large v-bind="attrs" v-on="on" id="activeIcon">
-                mdi-monitor-dashboard
-              </v-icon>
-            </template>
-            <span style="color: #113c4a; font-weight: bold">Exchanges</span>
-          </v-tooltip>
-        </div>
-        <div class="iconWrapper">
-          <v-tooltip bottom open-delay="300" color="#f0943d">
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon large v-bind="attrs" v-on="on"
-                >mdi-swap-horizontal</v-icon
+              <v-icon
+                v-bind:class="{ activeIcon: option.isActive }"
+                large
+                v-bind="attrs"
+                v-on="on"
+                @click="navigate(option)"
               >
-            </template>
-            <span style="color: #113c4a; font-weight: bold">Exchanges</span>
-          </v-tooltip>
-        </div>
-        <div class="iconWrapper">
-          <v-tooltip bottom open-delay="300" color="#f0943d">
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon large v-bind="attrs" v-on="on">mdi-chart-bar</v-icon>
-            </template>
-            <span style="color: #113c4a; font-weight: bold">Charts</span>
-          </v-tooltip>
-        </div>
-        <div class="iconWrapper">
-          <v-tooltip bottom open-delay="300" color="#f0943d">
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon large v-bind="attrs" v-on="on">
-                mdi-chart-areaspline-variant
+                {{ option.icon }}
               </v-icon>
             </template>
-            <span style="color: #113c4a; font-weight: bold">Statistics</span>
+            <span style="color: #113c4a; font-weight: bold">{{
+              option.name
+            }}</span>
           </v-tooltip>
         </div>
       </div>
-      <div style="border-bottom: 1px solid #dddddd; margin: 80px 0"></div>
+      <div>
+        <br />
+        <br />
+        <br />
+        <div>_______</div>
+        <br />
+        <br />
+        <br />
+      </div>
       <div id="botNav">
         <div class="iconWrapper">
           <v-tooltip bottom open-delay="300" color="#f0943d">
@@ -71,33 +64,6 @@
           </v-tooltip>
         </div>
       </div>
-    </v-navigation-drawer> -->
-    <v-navigation-drawer id="drawer" :mini-variant="miniDrawer" fixed>
-      <div>
-        <div
-          v-for="option in menuOptions"
-          :key="option.name"
-          class="iconWrapper"
-          v-bind:class="{ activeIconWrapper: option.isActive }"
-        >
-          <v-tooltip bottom open-delay="300" color="#f0943d">
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-bind:class="{ activeIcon: option.isActive }"
-                large
-                v-bind="attrs"
-                v-on="on"
-                @click="navigate(option)"
-              >
-                {{ option.icon }}
-              </v-icon>
-            </template>
-            <span style="color: #113c4a; font-weight: bold">{{
-              option.name
-            }}</span>
-          </v-tooltip>
-        </div>
-      </div>
     </v-navigation-drawer>
   </div>
 </template>
@@ -105,7 +71,7 @@
 <script lang="ts">
 import router from "@/router";
 import { Component, Vue } from "vue-property-decorator";
-import { removeTokens } from "../utils";
+import { clearLocalStorage } from "../utils";
 
 @Component
 export default class Menu extends Vue {
@@ -148,7 +114,7 @@ export default class Menu extends Vue {
   }
 
   public logout(): any {
-    removeTokens();
+    clearLocalStorage();
     router.push("/");
   }
   public navigate(option: any): void {
@@ -198,4 +164,4 @@ button:hover {
 .activeIconWrapper {
   border-left: 4px solid #f0943d;
 }
-</style>
+</style> 

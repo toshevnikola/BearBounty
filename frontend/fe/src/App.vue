@@ -3,30 +3,34 @@
 <template>
   <v-app>
     <div id="app">
-      <!-- <Landing></Landing> -->
-      <!-- <div id="nav"> -->
-      <!-- <router-link :to="{ name: 'Algorithms' }"></router-link> -->
-      <!-- <router-link :to="{ name: 'Plans' }"></router-link> -->
-      <!-- <router-link :to="{ name: 'Charts' }"></router-link> -->
-      <!-- <router-link :to="{ name: 'Landing' }">Landing</router-link> |
-        <router-link :to="{ name: 'Dashboard' }">Dashboard</router-link> |
-        <router-link :to="{ name: 'About' }">About</router-link> -->
-      <!-- </div> -->
-      <Menu />
+      <Menu v-if="!isLandingShown" />
       <router-view />
-      <Footer />
+      <!-- <Footer /> -->
     </div>
   </v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import Footer from "./components/Footer.vue";
 import Menu from "./components/Menu.vue";
 @Component({
   components: { Footer, Menu },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  [x: string]: any;
+  public isLandingShown: boolean = false;
+  public isSignIn: boolean = false;
+  @Watch("$route", { immediate: true, deep: true })
+  onUrlChange(newVal: any) {
+    // Some action
+    if (newVal.name === "Landing") {
+      this.isLandingShown = true;
+    } else {
+      this.isLandingShown = false;
+    }
+  }
+}
 </script>
 
 <style>

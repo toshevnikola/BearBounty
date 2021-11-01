@@ -104,7 +104,9 @@ export default class AddExchange extends Vue {
       )
       .then((res) => {
         console.log(res);
-        this.isExchangeShown(true);
+        api.refreshAssets(token, res.data.id).then((res) => {
+          this.isExchangeShown(true);
+        });
       })
       .catch((e) => {
         console.log(e.response.status);

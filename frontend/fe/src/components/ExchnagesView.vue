@@ -101,6 +101,7 @@ export default class ExchangesView extends Vue {
   ];
 
   public async mounted(): Promise<void> {
+    console.log("MOUNTED!");
     await api.getUserExchanges(this.token).then((res) => {
       this.exchanges = res.data;
       this.exchangesFetched = true;

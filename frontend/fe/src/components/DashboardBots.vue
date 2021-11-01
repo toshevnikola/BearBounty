@@ -62,7 +62,7 @@
                   <v-list-item-title
                     class="marketchipsbg--text"
                     style="cursor: pointer"
-                    @click="editBot(bot.id)"
+                    @click="editBot(bot)"
                   >
                     <v-icon class="marketchipsbg--text">mdi-pencil</v-icon>
                     Edit
@@ -96,7 +96,8 @@
           class="botImgWrapper"
           :class="{ activeBot: bot.is_running, inactiveBot: !bot.is_running }"
         >
-          <img src="../assets/robot_orange.png" />
+          <img :src="require('../assets/robot_' + bot.avatar_color + '.png')" />
+          <!-- <img src="../assets/robot_orange.png" alt="" /> -->
         </div>
         <div class="botTitleWrapper">
           <h2 class="botTitle">{{ bot.name }}</h2>
@@ -107,7 +108,8 @@
           <span class="greenText">Markets</span><br />
           <div class="markets">
             <v-chip
-              v-for="market in bot.trading_pairs"
+              small
+              v-for="market in bot.trading_pairs.slice(0, 9)"
               :key="market"
               color="marketchipsbg"
               class="marketchipstext--text market"
@@ -116,32 +118,46 @@
             </v-chip>
           </div>
           <span class="greenText">Allocated funds</span> <br />
-          <span class="blueText">{{ bot.allocated_funds }}</span> <br />
-          <span class="greenText">Base Coin</span><br />
-          <span class="blueText">{{ bot.base_coin }}</span>
+          <span class="blueText">
+            {{ bot.allocated_funds.toFixed(2) }} {{ bot.base_coin }}
+          </span>
+          <br />
+          <span class="greenText">Total profit</span> <br />
+          <span class="blueText">
+            {{ totalProfit(bot) }}
+          </span>
         </div>
       </div>
     </div>
     <AddBot
       :selectedAccount="selectedAccount"
-      @isAddBotShown="closeAddBot()"
+      @isAddBotShown="closeAddBot"
       v-if="isAddBotShown"
+    />
+    <EditBot
+      @isEditBotShown="closeEditBot"
+      v-if="isEditBotShown"
+      :selectedAccount="selectedAccount"
+      :bot="botToEdit"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Bot, UserExchange, BotEdit } from "../interfaces";
+import { Bot, UserExchange, BotEdit, Deal } from "../interfaces";
 import { api } from "../api";
 import AddBot from "../components/AddBot.vue";
-@Component({ components: { AddBot } })
+import EditBot from "../components/EditBot.vue";
+@Component({ components: { AddBot, EditBot } })
 export default class DashboardBots extends Vue {
   public bots: Array<Bot> = [];
   @Prop(Object) readonly selectedAccount!: UserExchange;
   public botsFetched: boolean = false;
   public token: string = localStorage.authToken;
   public isAddBotShown: boolean = false;
+  public isEditBotShown: boolean = false;
+  public botToEdit: Bot | undefined;
 
   public botActionOptions: Array<any> = [
     { title: "Pause", icon: "mdi-pause" },
@@ -149,6 +165,9 @@ export default class DashboardBots extends Vue {
     { title: "Edit", icon: "mdi-pencil" },
   ];
   public async mounted() {
+    this.refreshBots();
+  }
+  public async refreshBots(): Promise<any> {
     await api
       .getBotsByUserExchange(this.token, this.selectedAccount.id)
       .then((res: any) => {
@@ -156,26 +175,75 @@ export default class DashboardBots extends Vue {
         this.botsFetched = true;
       });
   }
-  public editBot(e: any): void {
-    console.log(e);
+  public editBot(bot: any): void {
+    this.botToEdit = bot;
+    this.openEditBot();
   }
+
+  public computeProfitForDeal(d: Deal): number | null {
+    let totalBuy = 0;
+    let avgBuy = 0;
+    let totalSell = 0;
+    let sellAmount = 0;
+    let sellPrice = 0;
+    d.orders.forEach((order) => {
+      if (order.status === 1) {
+        return 0;
+      } else if (order.type === 1 && order.status === 2) {
+        totalBuy += order.amount / order.price;
+        console.log("Buy amount for deal:", order.deal_id, order.amount);
+      } else if (order.type === 2 && order.status === 2) {
+        totalSell = order.amount / order.price;
+        sellAmount = order.amount;
+        sellPrice = order.price;
+        console.log("Sell amount", order.amount);
+      }
+      console.log("-------");
+    });
+    if (sellAmount != 0) {
+      return (totalBuy - totalSell) * sellPrice;
+    }
+    return null;
+  }
+
+  public totalProfit(bot: Bot): number {
+    return 1;
+  }
+
   public async deleteBot(bot: any): Promise<void> {
     await api.deleteBot(this.token, bot.id).then((res) => {
       this.bots = this.bots.filter((b) => b !== bot);
     });
   }
+
   public openAddBot(): void {
     this.isAddBotShown = true;
   }
-  public closeAddBot(): void {
-    this.isAddBotShown = false;
+  public openEditBot(): void {
+    this.isEditBotShown = true;
+  }
+
+  public closeAddBot(e: any): void {
+    this.isAddBotShown = !e["show"];
+    let isCreated: boolean = e["isCreated"];
+    if (isCreated) {
+      this.refreshBots();
+    }
+  }
+  public closeEditBot(e: any): void {
+    this.isEditBotShown = !e["show"];
+    let isCreated: boolean = e["isCreated"];
+    if (isCreated) {
+      this.refreshBots();
+    }
   }
 
   public async toggleIsRunning(bot: Bot): Promise<void> {
     const payload: BotEdit = {
+      id: bot.id,
       is_running: !bot.is_running,
     };
-    await api.updateBot(this.token, bot.id, payload).then((res) => {
+    await api.updateBot(this.token, payload).then((res) => {
       this.bots.forEach((x) => {
         if (x.id === bot.id) {
           x.is_running = !x.is_running;

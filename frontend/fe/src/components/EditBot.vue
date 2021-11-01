@@ -192,9 +192,10 @@
                 >
                   Account Balance: {{ baseAssetAvailable }} USDT
                 </h4>
-                <v-btn width="100%" @click="createBot()" color="secondary">
-                  Create Bot
+                <v-btn width="100%" @click="editBot()" color="secondary">
+                  Edit Bot
                 </v-btn>
+                <v-btn width="100%" text @click="close(false)">Close</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -207,11 +208,12 @@
 <script lang="ts">
 import Linechart from "./Linechart.vue";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { BotCreate, UserExchange } from "../interfaces";
+import { Bot, BotCreate, BotEdit, UserExchange } from "../interfaces";
 import { api } from "../api";
 @Component({ components: { Linechart } })
-export default class AddBot extends Vue {
+export default class EditBot extends Vue {
   @Prop(Object) readonly selectedAccount!: UserExchange;
+  @Prop(Object) readonly bot!: Bot;
   public token: string = localStorage.authToken;
   public dialog: boolean = true;
   public botName: string = "";
@@ -230,11 +232,13 @@ export default class AddBot extends Vue {
   public priceDeviationforSafetyOrdersPct: number = 2.0;
   public safetyOrderAmountScale: number = 1.25;
   public chartId = 1;
-  public async createBot(): Promise<void> {
+  public editBotId: number = -1;
+  public async editBot(): Promise<void> {
     if (!this.stopLossSwitch) {
       this.stopLossPct = 0;
     }
-    const payload: BotCreate = {
+    const payload: BotEdit = {
+      id: this.editBotId,
       name: this.botName,
       description: this.botDescription,
       trading_pairs: this.selectedMarkets,
@@ -244,18 +248,14 @@ export default class AddBot extends Vue {
       max_safety_orders: this.maxNumberOfSafetyOrders,
       max_active_safety_orders: this.maxNumberOfSafetyOrders,
       safety_order_price_deviation_pct: this.priceDeviationforSafetyOrdersPct,
-      safety_order_price_deviation_scale: this.safetyOrderAmountScale,
+      safety_order_price_deviation_scale: this.safetyOrderStepScale,
       allocated_funds: this.totalRequiredAmount,
-      consider_overall_sentiment: false,
       stop_loss_pct: this.stopLossPct,
       take_profit_pct: this.targetProfit,
-      is_running: true,
-      in_deal: false,
-      user_exchange_id: this.selectedAccount.id,
       avatar_color: this.selectedAvatar.color,
     };
 
-    await api.createBot(this.token, payload).then((res) => {
+    await api.updateBot(this.token, payload).then((res) => {
       console.log(res.data);
       this.close(true);
     });
@@ -310,11 +310,48 @@ export default class AddBot extends Vue {
     });
     this.selectedAvatar = avatar;
   }
+  public setSelectedAvatarByColor(avatarColor: string): void {
+    this.avatars.forEach((x) => {
+      if (x.color === avatarColor) {
+        x.selected = true;
+        this.selectedAvatar = x;
+      } else x.selected = false;
+    });
+  }
   public mounted(): void {
-    this.setSelected(this.avatars[0]);
     this.markets = this.selectedAccount.exchange.supported_pairs;
-    this.getAsset(this.baseCoin);
 
+    if (typeof this.bot.stop_loss_pct !== "undefined") {
+      this.stopLossPct = this.bot.stop_loss_pct;
+      console.log("stoplosspct", this.stopLossPct);
+      if (this.bot.stop_loss_pct === 0) {
+        this.stopLossSwitch = false;
+      } else {
+        this.stopLossSwitch = true;
+      }
+    }
+    this.editBotId = this.bot.id;
+    if (this.bot.avatar_color)
+      this.setSelectedAvatarByColor(this.bot.avatar_color);
+    if (this.bot.base_coin) this.baseCoin = this.bot.base_coin;
+    this.getAsset(this.baseCoin);
+    if (this.bot.name) this.botName = this.bot.name;
+    if (this.bot.description) this.botDescription = this.bot.description;
+    if (this.bot.trading_pairs) this.selectedMarkets = this.bot.trading_pairs;
+    if (this.bot.take_profit_pct) this.targetProfit = this.bot.take_profit_pct;
+    if (this.bot.base_order_amount)
+      this.baseOrderAmount = this.bot.base_order_amount;
+    if (this.bot.safety_order_amount)
+      this.safetyOrderAmount = this.bot.safety_order_amount;
+    if (this.bot.safety_order_price_deviation_scale)
+      this.safetyOrderAmountScale = this.bot.safety_order_price_deviation_scale;
+    if (this.bot.safety_order_price_deviation_pct)
+      this.priceDeviationforSafetyOrdersPct =
+        this.bot.safety_order_price_deviation_pct;
+    if (this.bot.max_safety_orders)
+      this.maxNumberOfSafetyOrders = this.bot.max_safety_orders;
+    if (this.bot.max_active_safety_orders)
+      this.maxActiveDeals = this.bot.max_active_safety_orders;
     this.updateChart();
   }
   public updateChart(): void {
@@ -342,12 +379,10 @@ export default class AddBot extends Vue {
       let k: number = 0;
       for (let j = 0; j <= i; j++) {
         k += this.orderAmounts[j];
-        // console.log("k=", k);
       }
       this.cummulativeOrderAmounts[i] = k;
       this.potentialProfits[i] = (this.targetProfit / 100) * k;
     }
-    // console.log(this.cummulativeOrderAmounts);
   }
   public setOrderLabels(): void {
     for (let i = 0; i < this.orderAmounts.length; i++) {
@@ -358,7 +393,7 @@ export default class AddBot extends Vue {
     this.chartId += 1;
   }
 
-  @Emit("isAddBotShown")
+  @Emit("isEditBotShown")
   public isBotShown(show: boolean, isCreated: boolean): any {
     return { show, isCreated };
   }
