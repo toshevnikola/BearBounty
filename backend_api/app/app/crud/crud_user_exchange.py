@@ -7,29 +7,27 @@ from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
 from app.models.user_exchange import UserExchange
-from app.models.exchange import Exchange
 from app.schemas.user_exchange import UserExchangeCreate, UserExchangeUpdate
-import crud
 
 
 class CRUDUserExchange(CRUDBase[UserExchange, UserExchangeCreate, UserExchangeUpdate]):
     def get_by_user_and_exchange(
-        self, db: Session, user_id: int, exchange_id: int
+            self, db: Session, user_id: int, exchange_id: int
     ) -> Optional[UserExchange]:
         return (
             db.query(UserExchange)
-            .filter(
+                .filter(
                 UserExchange.user_id == user_id, UserExchange.exchange_id == exchange_id
             )
-            .first()
+                .first()
         )
 
     def create_with_user(
-        self,
-        db: Session,
-        *,
-        obj_in: UserExchangeCreate,
-        user_id: int,
+            self,
+            db: Session,
+            *,
+            obj_in: UserExchangeCreate,
+            user_id: int,
     ) -> UserExchange:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data, user_id=user_id)  # type: ignore
@@ -47,9 +45,9 @@ class CRUDUserExchange(CRUDBase[UserExchange, UserExchangeCreate, UserExchangeUp
     def get_by_user(self, db: Session, user_id: int) -> List[UserExchange]:
         return (
             db.query(UserExchange)
-            .join(UserExchange.exchange)
-            .filter(UserExchange.user_id == user_id)
-            .all()
+                .join(UserExchange.exchange)
+                .filter(UserExchange.user_id == user_id)
+                .all()
         )
 
     def get_with_refreshed_assets(self, db: Session, id: int) -> Optional[UserExchange]:

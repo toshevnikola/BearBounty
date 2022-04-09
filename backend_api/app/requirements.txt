@@ -41,3 +41,4 @@ zipp==3.5.0
 tenacity==8.0.1
 python-binance
 google-auth
+pytest

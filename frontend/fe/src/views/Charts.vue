@@ -15,14 +15,16 @@
               {{ item.cmc_rank }}
             </td>
             <td class="custom-class">
-              <v-img
-                aspect-ratio="1"
-                :src="`https://s2.coinmarketcap.com/static/img/coins/64x64/${item.id}.png`"
-                lazy-src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
-                max-width="25px"
-                style="display: inline-block; float: left"
-              >
-              </v-img>
+              <v-lazy
+                ><v-img
+                  aspect-ratio="1"
+                  lazy-src="https://s2.coinmarketcap.com/static/img/coins/32x32/1.png"
+                  :src="`https://s2.coinmarketcap.com/static/img/coins/32x32/${item.id}.png`"
+                  max-width="25px"
+                  style="display: inline-block; float: left"
+                >
+                </v-img
+              ></v-lazy>
               <span style="margin: 0 10px; float: left">
                 {{ item.name }}
               </span>
@@ -83,7 +85,7 @@ export default class Charts extends Vue {
     { text: "24h Volume(USD)", align: "left", value: "quote.USD.volume_24h" },
     { text: "Market Cap(USD)", align: "left", value: "quote.USD.market_cap" },
   ];
-  public itemsPerPage: number = 10;
+  public itemsPerPage: number = 5;
   public page: number = 1;
   public mounted() {
     const token: string = localStorage.authToken;

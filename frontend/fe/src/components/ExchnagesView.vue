@@ -32,14 +32,23 @@
       </div>
     </div>
     <div id="dealsWrapper" v-if="exchangesFetched">
-      <v-data-table :headers="headers" :items="exchanges">
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-right">{{ props.item.exchange.name }}</td>
-          <td class="text-xs-right">{{ props.item.pair }}</td>
-          <td class="text-xs-right">150</td>
-          <td class="text-xs-right">15</td>
-          <td class="text-xs-right">{{ props.item.is_active }}</td>
-          <td class="text-xs-right">{{ props.item.created_at }}</td>
+      <v-data-table
+        :headers="headers"
+        :items="exchanges"
+        @page-count="pageCount = $event"
+        :items-per-page="itemsPerPage"
+        :page.sync="page"
+      >
+        <template v-slot:item="{ item }">
+          <tr>
+            <td class="text-xs-right">{{ item.exchange.name }}</td>
+            <td class="text-xs-right">{{ computeCreatedAt(item) }}</td>
+            <td class="text-xs-right">
+              <v-btn icon> <v-icon color="primary"> mdi-delete</v-icon> </v-btn>
+              <v-btn icon> <v-icon color="primary"> mdi-pencil</v-icon> </v-btn>
+              <v-btn icon> <v-icon color="primary"> mdi-robot</v-icon> </v-btn>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </div>
@@ -52,12 +61,16 @@
 
 <script lang="ts">
 import { api } from "@/api";
-import { UserExchange } from "@/interfaces";
+import { Deal, Order, UserExchange } from "@/interfaces";
+import moment from "moment";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddExchange from "../components/AddExchange.vue";
 @Component({ components: { AddExchange } })
 export default class ExchangesView extends Vue {
   public exchanges: Array<UserExchange> = [];
+  public pageCount: number = 5;
+  public pageSize: number = 3;
+  public page: number = 1;
   @Prop(Object) readonly selectedAccount!: UserExchange;
   public exchangesFetched: boolean = false;
   public isAddExchangeShown: boolean = false;
@@ -69,28 +82,8 @@ export default class ExchangesView extends Vue {
       value: "exchange.name",
     },
     {
-      text: "Balance",
-      value: "balance",
-      align: "left",
-    },
-    {
-      text: "24hr Change",
-      value: "24hrchange",
-      align: "left",
-    },
-    {
-      text: "Total Bots",
-      value: "totalbots",
-      align: "left",
-    },
-    {
-      text: "Running bots",
-      value: "runningbots",
-      align: "left",
-    },
-    {
       text: "Date connected",
-      value: "dateconnected",
+      value: "created_at",
       align: "left",
     },
     {
@@ -115,6 +108,13 @@ export default class ExchangesView extends Vue {
   public closeAddExchange(): void {
     this.isAddExchangeShown = false;
     console.log("Exchange closed");
+  }
+  public computeCreatedAt(d: Deal | Order) {
+    var dateObj = new Date(d.created_at);
+    let mom = moment(dateObj).format("YYYY/MM/DD HH:mm:ss");
+    console.log(d.created_at);
+    console.log(mom);
+    return mom;
   }
 }
 </script>

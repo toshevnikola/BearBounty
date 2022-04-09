@@ -174,11 +174,11 @@ export default class DashboardHeader extends Vue {
   background-color: #113c4a !important;
 }
 #leftHeader {
-  width: 70%;
+  width: 65%;
   float: left;
 }
 #rightHeader {
-  width: 30%;
+  width: 35%;
   float: left;
   margin-top: 20px;
 }

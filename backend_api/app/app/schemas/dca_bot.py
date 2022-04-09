@@ -1,9 +1,11 @@
-from typing import Optional, List
-
+from __future__ import annotations
+from typing import Optional, List, Any
 from pydantic import BaseModel
 
 
 # Shared properties
+
+
 class DCABotBase(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
@@ -22,6 +24,7 @@ class DCABotBase(BaseModel):
     take_profit_pct: Optional[float] = None
     is_running: Optional[bool]
     in_deal: Optional[bool]
+    deals: Optional[List[Any]] = []
 
 
 # Properties to receive via API on creation

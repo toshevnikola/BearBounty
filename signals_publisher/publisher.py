@@ -92,7 +92,7 @@ async def main():
         for pair_to_check, potential_orders in results.items():
             summary = await check_signal(symbol=pair_to_check.trading_pair, interval="15m")
             print(summary)
-            if summary in ["BUY", "STRONG_BUY"]:
+            if summary in ['NEUTRAL','SELL',"BUY", "STRONG_BUY"]:
                 for potential_order in potential_orders:
                     buy_order_signal = BuyOrderSignal(
                         trading_pair=pair_to_check.trading_pair,

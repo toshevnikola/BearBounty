@@ -8,3 +8,5 @@ from .user_exchange import (
 )
 from .dca_bot import DCABot, DCABotCreate, DCABotInDB, DCABotUpdate
 from .deal import Deal, DealCreate, DealInDB, DealUpdate
+
+from .order import Order

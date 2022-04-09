@@ -13,7 +13,7 @@ services:
 #      - backend_api/app/.env
 #    volumes:
 #      - database-data:/var/lib/postgresql/data/
-#
+
 #  celery-workers:
 #    build:
 #      context: order_manager

@@ -10,8 +10,9 @@ export interface UserExchange{
     is_valid:boolean,
     exchange:Exchange,
     currency:string,
-    balance:number
-    assets:Array<any>
+    balance:number,
+    assets:Array<any>,
+    created_at:string
 }
 export interface Bot{
     name?:string,
@@ -32,7 +33,8 @@ export interface Bot{
     in_deal?:boolean,
     id:number,
     user_exchange_id:number,
-    avatar_color?:string
+    avatar_color?:string,
+    deals:Array<Deal>
 }
 export interface BotEdit{
     name?:string,

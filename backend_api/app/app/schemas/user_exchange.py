@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel, EmailStr
@@ -42,3 +43,4 @@ class UserExchangeInDB(UserExchangeInDBBase):
 class UserExchange(UserExchangeInDBBase):
     exchange: Exchange
     assets: Optional[list]
+    created_at:datetime

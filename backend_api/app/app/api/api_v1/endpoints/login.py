@@ -13,7 +13,7 @@ from app.schemas.token import JWTTokenResponse
 from app.schemas.user import UserLogin, User, NoPasswordUserCreate
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from schemas.token import Token
+from app.schemas.token import Token
 
 router = APIRouter()
 

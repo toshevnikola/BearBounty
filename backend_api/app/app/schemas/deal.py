@@ -1,10 +1,10 @@
+from __future__ import annotations
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Any
 
 from pydantic import BaseModel, EmailStr
 
 # Shared properties
-from app.schemas import DCABot
 
 
 class DealBase(BaseModel):
@@ -37,4 +37,8 @@ class DealInDB(DealInDBBase):
 class Deal(DealInDBBase):
     created_at: datetime
     updated_at: datetime
-    bot: DCABot
+    bot: Optional[Any]
+    orders: Optional[list]
+
+
+Deal.update_forward_refs()

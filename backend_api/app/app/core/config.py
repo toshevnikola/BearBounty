@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     # ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 10 #this is 10 minutes
     ACCESS_TOKEN_EXPIRE_SECONDS: int = (
-        60 * 10 * 60
+            60 * 10 * 60
     )  # this is 10 hours used while developing
     REFRESH_TOKEN_EXPIRE_SECONDS: int = 60 * 24 * 60 * 60
     authjwt_denylist_enabled: bool = True
@@ -22,6 +22,13 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+
+    # TESTS POSTGRES
+    TEST_POSTGRES_SERVER: str
+    TEST_POSTGRES_USER: str
+    TEST_POSTGRES_PASSWORD: str
+    TEST_POSTGRES_DB: str
+    TEST_SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
 
     # GOOGLE OAUTH CREDENTIALS
     GOOGLE_CLIENT_ID: str
@@ -37,6 +44,18 @@ class Settings(BaseSettings):
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_SERVER"),
             path=f"/{values.get('POSTGRES_DB') or ''}",
+        )
+
+    @validator("TEST_SQLALCHEMY_DATABASE_URI", pre=True)
+    def assemble_db_connection_tests(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+        if isinstance(v, str):
+            return v
+        return PostgresDsn.build(
+            scheme="postgresql",
+            user=values.get("TEST_POSTGRES_USER"),
+            password=values.get("TEST_POSTGRES_PASSWORD"),
+            host=values.get("TEST_POSTGRES_SERVER"),
+            path=f"/{values.get('TEST_POSTGRES_DB') or ''}",
         )
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [

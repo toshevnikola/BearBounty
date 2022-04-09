@@ -122,10 +122,8 @@
             {{ bot.allocated_funds.toFixed(2) }} {{ bot.base_coin }}
           </span>
           <br />
-          <span class="greenText">Total profit</span> <br />
-          <span class="blueText">
-            {{ totalProfit(bot) }}
-          </span>
+          <!-- <span class="greenText">Total profit</span> <br /> -->
+          <!-- <span class="blueText"> {{ totalProfit(bot).toFixed(3) }} USDT </span> -->
         </div>
       </div>
     </div>
@@ -191,14 +189,11 @@ export default class DashboardBots extends Vue {
         return 0;
       } else if (order.type === 1 && order.status === 2) {
         totalBuy += order.amount / order.price;
-        console.log("Buy amount for deal:", order.deal_id, order.amount);
       } else if (order.type === 2 && order.status === 2) {
         totalSell = order.amount / order.price;
         sellAmount = order.amount;
         sellPrice = order.price;
-        console.log("Sell amount", order.amount);
       }
-      console.log("-------");
     });
     if (sellAmount != 0) {
       return (totalBuy - totalSell) * sellPrice;
@@ -207,7 +202,42 @@ export default class DashboardBots extends Vue {
   }
 
   public totalProfit(bot: Bot): number {
-    return 1;
+    let totalProfit = 0;
+    if (bot.deals) {
+      bot.deals.forEach((d) => {
+        if (d) {
+          console.log(d);
+          let profitForDeal = this.computeProfitForDeal(d);
+          if (profitForDeal) {
+            totalProfit += profitForDeal;
+          }
+        }
+      });
+      return totalProfit;
+    }
+    return 0;
+  }
+  public computeProfit(d: Deal): number | null {
+    let totalBuy = 0;
+    let avgBuy = 0;
+    let totalSell = 0;
+    let sellAmount = 0;
+    let sellPrice = 0;
+    d.orders.forEach((order) => {
+      if (order.status === 1) {
+        return 0;
+      } else if (order.type === 1 && order.status === 2) {
+        totalBuy += order.amount / order.price;
+      } else if (order.type === 2 && order.status === 2) {
+        totalSell = order.amount / order.price;
+        sellAmount = order.amount;
+        sellPrice = order.price;
+      }
+    });
+    if (sellAmount != 0) {
+      return (totalBuy - totalSell) * sellPrice;
+    }
+    return null;
   }
 
   public async deleteBot(bot: any): Promise<void> {
@@ -251,9 +281,7 @@ export default class DashboardBots extends Vue {
       });
     });
   }
-  public viewDeals(e: any): void {
-    console.log(e);
-  }
+  public viewDeals(e: any): void {}
 }
 </script>
 
@@ -266,7 +294,7 @@ export default class DashboardBots extends Vue {
   background-color: #c4c4c4;
   float: left;
   width: 300px;
-  height: 430px;
+  height: 380px;
   margin-right: 50px;
   margin-bottom: 5%;
 }
