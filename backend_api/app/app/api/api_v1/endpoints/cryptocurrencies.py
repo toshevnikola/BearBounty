@@ -4,6 +4,8 @@ from requests import Session
 
 from utils import get_current_user
 
+from backend_api.app.app.core.config import settings
+
 router = APIRouter()
 
 
@@ -15,7 +17,7 @@ def get_top_100_cryptocurrencies(*, Authorize: AuthJWT = Depends()):
         parameters = {"start": "1", "limit": "100", "convert": "USD"}
         headers = {
             "Accepts": "application/json",
-            "X-CMC_PRO_API_KEY": "ba4f1a42-3ddf-44f4-babd-a643993618ae",
+            "X-CMC_PRO_API_KEY": settings.COINMARKETCAP_KEY,
         }
 
         session = Session()
